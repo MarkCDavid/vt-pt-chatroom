@@ -7,6 +7,9 @@ package vilnius.tech;
 public class Labaratorinis1 {
 
     public static void main(String[] args) {
-
+        // Užduotis #3
+        int nameLength = "Aurimas".length();
+        int surnameLength = "Šakalys".length();
+        int[][] array = new int[nameLength][surnameLength];
     }
 }
