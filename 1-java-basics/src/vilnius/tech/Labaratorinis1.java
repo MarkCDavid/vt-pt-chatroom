@@ -1,8 +1,8 @@
 package vilnius.tech;
 
-public class Main {
+public class Labaratorinis1 {
 
     public static void main(String[] args) {
-	// write your code here
+        
     }
 }
