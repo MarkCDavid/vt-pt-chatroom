@@ -1,5 +1,9 @@
 package vilnius.tech;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.Format;
+import java.text.NumberFormat;
 import java.util.Random;
 
 /**
@@ -16,7 +20,7 @@ public class Labaratorinis1 {
         String surname = "Šakalys";
         int nameLength = name.length();
         int surnameLength = surname.length();
-        int[][] array = new int[nameLength][surnameLength];
+        Integer[][] array = new Integer[nameLength][surnameLength];
 
         // Užduotis #4 - užpildome šį masyvą intervale apibrėžtais atsitiktiniais dydžiais
         int min = VowelCount(name);
@@ -30,8 +34,37 @@ public class Labaratorinis1 {
                     array[i][j] = prng.nextInt(to) + min;
                 }
             }
-            Print2DIntArray(array, nameLength, surnameLength);
+            Print2DArray(array, true, NumberFormat.getInstance());
         }
+
+        // Užduotis #5 - apskaičiuoti eilučių bei stulpelių reikšmių vidurkius
+        Float[] rowAverages = new Float[nameLength];
+        Float[] columnAverages = new Float[surnameLength];
+
+        for(int row = 0; row < nameLength; row++) {
+            for(int column = 0; column < surnameLength; column++){
+                if(rowAverages[row] == null){
+                    rowAverages[row] = 0f;
+                }
+                rowAverages[row] += array[row][column];
+            }
+            rowAverages[row] /= surnameLength;
+        }
+
+        for(int column = 0; column < surnameLength; column++) {
+            for(int row = 0; row < nameLength; row++){
+                if(columnAverages[row] == null){
+                    columnAverages[row] = 0f;
+                }
+                columnAverages[column] += array[row][column];
+            }
+            columnAverages[column] /= nameLength;
+        }
+
+        final DecimalFormat decimalFormat = new DecimalFormat("##.0000");
+        decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
+        PrintArray(rowAverages, decimalFormat);
+        PrintArray(columnAverages, decimalFormat);
     }
 
     public static int VowelCount(String target) {
@@ -44,15 +77,32 @@ public class Labaratorinis1 {
         return total;
     }
 
-    public static void Print2DIntArray(int[][] array, int rowCount, int columnCount){
-        for (int i = -1; i < rowCount; i++) {
-            for (int j = -1; j < columnCount; j++) {
-                if(i == -1 && j == -1) System.out.print('\t');
-                else if (i == -1) System.out.print(j + "\t");
-                else if (j == -1) System.out.print(i + "\t");
-                else System.out.print(array[i][j] + "\t");
-            }
-            System.out.print('\n');
+    public static <T> void PrintArray(T[] array, Format format) {
+        for (T item : array) {
+            System.out.print(format.format(item) + "\t");
         }
+        System.out.print('\n');
+    }
+
+    public static <T> void Print2DArray(T[][] array, boolean showIndexes, Format format) {
+        for (int i = 0; i < array.length; i++) {
+            if(showIndexes) {
+                if(i == 0) PrintArrayColumnIndexes(array[i].length);
+                PrintArrayRowIndex(i);
+            }
+            PrintArray(array[i], format);
+        }
+    }
+
+    private static void PrintArrayColumnIndexes(int count) {
+        for (int i = -1; i < count; i++) {
+            final String symbol = (i == -1 ? " " : String.valueOf(i));
+            System.out.print(symbol + "\t");
+        }
+        System.out.print('\n');
+    }
+
+    private static void PrintArrayRowIndex(int index) {
+        System.out.print(index + "\t");
     }
 }
