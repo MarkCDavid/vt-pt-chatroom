@@ -63,8 +63,22 @@ public class Labaratorinis1 {
 
         final DecimalFormat decimalFormat = new DecimalFormat("##.0000");
         decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
+
+	System.out.println("Rows: ");
         PrintArray(rowAverages, decimalFormat);
+	System.out.println("Columns: ");
         PrintArray(columnAverages, decimalFormat);
+
+        // Užduotis #6 - skaičiuojame skaičių kiekį kiekvienoje eilutėje kurių reikšmė didesnis nei tos eilutės vidurkis
+        for(int row = 0; row < nameLength; row++) {
+            int count = 0;
+            for(int column = 0; column < surnameLength; column++){
+                if(array[row][column] > rowAverages[row]){
+                    count++;
+                }
+            }
+            System.out.println("There are " + count + " numbers in row " + row + " that are larger than the average");
+        }
     }
 
     public static int VowelCount(String target) {
