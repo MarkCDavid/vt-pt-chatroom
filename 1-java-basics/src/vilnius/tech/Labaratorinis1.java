@@ -80,12 +80,25 @@ public class Labaratorinis1 {
             }
             System.out.println("There are " + count + " numbers in row " + row + " that are larger than the average");
         }
+	
 	// Task #7 - find max number in 2D array excluding a-th row and column
 	System.out.println("Max value excluding row " + min + " and column " + min + " is " + MaxExcluding(array, min, min));
+	
 	// Task #8 - print a-th row values sorted without mutating the array
 	Integer[] arrayCopy = array[min].clone();
 	Arrays.sort(arrayCopy);
 	PrintArray(arrayCopy, NumberFormat.getInstance());	
+	
+	// Task #9 - find index of min value in columnAverage array and print the min value in the column of said index.
+	int minIndex = IndexOfMin(columnAverages);
+	int minValue = array[0][minIndex];
+	for(int i = 1; i < nameLength; i++) {
+		if(array[i][minIndex] < minValue) {
+			minValue = array[i][minIndex];
+		}
+	}	
+	System.out.println(minValue);
+
     }
 
     public static int VowelCount(String target) {
@@ -96,6 +109,18 @@ public class Labaratorinis1 {
             }
         }
         return total;
+    }
+
+    public static int IndexOfMin(Float[] array) {
+	Float min = array[0];
+	int index = 0;
+	for(int i = 1; i < array.length; i++){
+		if(array[i] < min) {
+			min = array[i];
+			index = i;
+		}
+	}
+	return index;
     }
 
     public static Integer MaxExcluding(Integer[][] array, int rowExclude, int columnExclude) {
