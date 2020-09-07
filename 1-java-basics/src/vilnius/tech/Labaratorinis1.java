@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.NumberFormat;
 import java.util.Random;
+import java.util.Arrays;
 
 /**
  * @author Aurimas Šakalys PRIf-18/2 20185388
@@ -80,7 +81,11 @@ public class Labaratorinis1 {
             System.out.println("There are " + count + " numbers in row " + row + " that are larger than the average");
         }
 	// Task #7 - find max number in 2D array excluding a-th row and column
-	System.out.println("Max value excluding row " + min + " and column " + min + " is " + MaxExcluding(array, min, min));	
+	System.out.println("Max value excluding row " + min + " and column " + min + " is " + MaxExcluding(array, min, min));
+	// Task #8 - print a-th row values sorted without mutating the array
+	Integer[] arrayCopy = array[min].clone();
+	Arrays.sort(arrayCopy);
+	PrintArray(arrayCopy, NumberFormat.getInstance());	
     }
 
     public static int VowelCount(String target) {
