@@ -79,6 +79,8 @@ public class Labaratorinis1 {
             }
             System.out.println("There are " + count + " numbers in row " + row + " that are larger than the average");
         }
+	// Task #7 - find max number in 2D array excluding a-th row and column
+	System.out.println("Max value excluding row " + min + " and column " + min + " is " + MaxExcluding(array, min, min));	
     }
 
     public static int VowelCount(String target) {
@@ -89,6 +91,22 @@ public class Labaratorinis1 {
             }
         }
         return total;
+    }
+
+    public static Integer MaxExcluding(Integer[][] array, int rowExclude, int columnExclude) {
+    	Integer max = -1;	
+	for(int row = 0; row < array.length; row++){
+    	    for(int col = 0; col < array[row].length; col++){
+		if(row == rowExclude || col == columnExclude) {
+			continue;
+		}
+		if(array[row][col] > max){
+			max = array[row][col];
+		}		
+			
+	    }	
+    	}
+	return max;
     }
 
     public static <T> void PrintArray(T[] array, Format format) {
