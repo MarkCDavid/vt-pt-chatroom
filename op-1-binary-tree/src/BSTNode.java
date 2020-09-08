@@ -10,12 +10,27 @@ public class BSTNode<T extends Comparable<T>>  {
         this.value = value;
     }
 
-    public T getValue() {
-        return this.value;
+    public void insert(T value) {
+        this.insert(new BSTNode<>(value));
     }
 
-    public int getHeight() {
-        return this.height;
+    public void insert(BSTNode<T> node) {
+        int comparison = this.value.compareTo(node.value);
+        if(comparison == 0) return;
+
+        if(comparison < 0) insertLeft(node);
+        if(comparison > 0) insertRight(node);
+
+        this.height = this.calculateHeight();
+    }
+
+    public BSTNode<T> find(T value) {
+        int comparison = this.value.compareTo(value);
+
+        if(comparison == 0) return this;
+        if(hasLeft() && comparison < 0) return getLeft().find(value);
+        if(hasRight() && comparison > 0) return getRight().find(value);
+        return null;
     }
 
     public BSTNode<T> getLeft() {
@@ -38,25 +53,22 @@ public class BSTNode<T extends Comparable<T>>  {
         return this.left != null || this.right != null;
     }
 
-
-    public void insert(T value) {
-        this.insert(new BSTNode<>(value));
+    public T getValue() {
+        return this.value;
     }
 
-    public void insert(BSTNode<T> node) {
-        int comparison = this.value.compareTo(node.value);
-        if(comparison == 0) return;
-
-        if(comparison < 0) insertLeft(node);
-        if(comparison > 0) insertRight(node);
-
-        this.height = this.calculateHeight();
+    public int getHeight() {
+        return this.height;
     }
 
 
     @Override
     public String toString() {
-        return BSTTreePainter.toString(this);
+        return "BSTNode{" +
+                "value=" + value +
+                ", left=" + (hasLeft() ? getLeft().value : 'X') +
+                ", right=" + (hasRight() ? getRight().value : 'X') +
+                '}';
     }
 
     private void insertLeft(BSTNode<T> node) {
@@ -85,5 +97,5 @@ public class BSTNode<T extends Comparable<T>>  {
 
     private int height = 0;
 
-    private T value;
+    private final T value;
 }

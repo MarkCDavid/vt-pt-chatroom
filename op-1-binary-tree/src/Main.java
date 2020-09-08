@@ -6,11 +6,13 @@ public class Main {
         Random prng = new Random();
 
 
-        BSTNode<Integer> a = new BSTNode<>(prng.nextInt(20));
+        BSTNode<Integer> a = new BSTNode<>(10);
         for(int i = 0; i < 10; i++){
             a.insert(prng.nextInt(20));
         }
-        System.out.println(a.toString());
+
+        System.out.println(BSTTreePainter.toString(a));
+        System.out.println(a.find(12));
     }
 
 }
