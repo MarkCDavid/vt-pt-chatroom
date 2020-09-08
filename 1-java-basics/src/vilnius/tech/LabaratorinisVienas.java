@@ -12,7 +12,7 @@ import java.util.Scanner;
  * @author Aurimas Šakalys PRIf-18/2 20185388
  * Klasė skirta 1 labaratorinio darbo atlikimui.
  */
-public class Labaratorinis1 {
+public class LabaratorinisVienas {
 
     public static void main(String[] args) {
         // Užduotis #3 - apsirašome masyvą naudojant vardo ir pavardės ilgius
