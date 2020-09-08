@@ -14,13 +14,10 @@ import java.util.Scanner;
  */
 public class Labaratorinis1 {
 
-    final static String vowels = "aieou";
-
     public static void main(String[] args) {
         // Užduotis #3 - apsirašome masyvą naudojant vardo ir pavardės ilgius
 
         Scanner scanner = new Scanner(System.in);
-
         System.out.println("Enter your name: ");
         String name = scanner.next();
         System.out.println("Enter your surname: ");
@@ -107,6 +104,8 @@ public class Labaratorinis1 {
 
     }
 
+
+    private final static String vowels = "aieou";
     public static int VowelCount(String target) {
         int total = 0;
         for (char c : target.toLowerCase().toCharArray()) {
@@ -144,14 +143,14 @@ public class Labaratorinis1 {
         return max;
     }
 
-    public static <T> void PrintArray(T[] array, Format format) {
-        for (T item : array) {
+    public static void PrintArray(Object[] array, Format format) {
+        for (Object item : array) {
             System.out.print(format.format(item) + "\t");
         }
         System.out.print('\n');
     }
 
-    public static <T> void Print2DArray(T[][] array, boolean showIndexes, Format format) {
+    public static void Print2DArray(Object[][] array, boolean showIndexes, Format format) {
         for (int i = 0; i < array.length; i++) {
             if (showIndexes) {
                 if (i == 0) PrintArrayColumnIndexes(array[i].length);
