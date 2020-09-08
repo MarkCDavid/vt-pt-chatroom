@@ -6,6 +6,7 @@ import java.text.Format;
 import java.text.NumberFormat;
 import java.util.Random;
 import java.util.Arrays;
+import java.util.Scanner;
 
 /**
  * @author Aurimas Šakalys PRIf-18/2 20185388
@@ -17,8 +18,13 @@ public class Labaratorinis1 {
 
     public static void main(String[] args) {
         // Užduotis #3 - apsirašome masyvą naudojant vardo ir pavardės ilgius
-        String name = "Aurimas";
-        String surname = "Šakalys";
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter your name: ");
+        String name = scanner.next();
+        System.out.println("Enter your surname: ");
+        String surname = scanner.next();
         int nameLength = name.length();
         int surnameLength = surname.length();
         Integer[][] array = new Integer[nameLength][surnameLength];
@@ -54,8 +60,8 @@ public class Labaratorinis1 {
 
         for (int column = 0; column < surnameLength; column++) {
             for (int row = 0; row < nameLength; row++) {
-                if (columnAverages[row] == null) {
-                    columnAverages[row] = 0f;
+                if (columnAverages[column] == null) {
+                    columnAverages[column] = 0f;
                 }
                 columnAverages[column] += array[row][column];
             }
