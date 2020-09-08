@@ -90,6 +90,7 @@ public class Labaratorinis1 {
         // Užduotis #8 - išspausdinti a-tosios eilutės reikšmes jos nemutuojant
         Integer[] arrayCopy = array[min].clone();
         Arrays.sort(arrayCopy);
+        System.out.println("Row " + min + " sorted: ");
         PrintArray(arrayCopy, NumberFormat.getInstance());
 
         // Užduotis #9 - rasti mažiausio vidurkio stulpeliuose indeksą ir rasti mažiausią reikšmę tame stulpelyje;
@@ -100,7 +101,7 @@ public class Labaratorinis1 {
                 minValue = array[i][minIndex];
             }
         }
-        System.out.println(minValue);
+        System.out.println("Minimum value in column with lowest average: " + minValue);
 
     }
 
