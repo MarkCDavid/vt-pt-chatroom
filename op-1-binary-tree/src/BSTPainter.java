@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class BSTTreePainter {
+public class BSTPainter {
 
     private final static String NO_CONNECTION     = "   ";
     private final static String PARENT_CONNECTION = "++ ";
@@ -11,7 +11,7 @@ public class BSTTreePainter {
 
     public static <T extends Comparable<T>> String toString(BSTNode<T> node) {
         List<String> treeDisplay = prepareTreeDisplay(node.getHeight());
-        BSTTreePainter.buildTreeDisplay(treeDisplay, node);
+        BSTPainter.buildTreeDisplay(treeDisplay, node);
         return String.join("\n", treeDisplay);
     }
 
