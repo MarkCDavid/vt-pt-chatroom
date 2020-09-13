@@ -10,15 +10,6 @@
     </properties>
     <border type="none"/>
     <children>
-      <component id="3ae93" class="javax.swing.JTextField" binding="userText">
-        <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
-            <minimum-size width="400" height="20"/>
-            <preferred-size width="400" height="20"/>
-          </grid>
-        </constraints>
-        <properties/>
-      </component>
       <component id="cdd6c" class="javax.swing.JButton" binding="submitButton">
         <constraints>
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
@@ -70,6 +61,25 @@
         <border type="none"/>
         <children>
           <component id="5e2d5" class="javax.swing.JList" binding="loggedInList">
+            <constraints/>
+            <properties/>
+          </component>
+        </children>
+      </scrollpane>
+      <scrollpane id="6fb77">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <minimum-size width="400" height="50"/>
+            <preferred-size width="400" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <horizontalScrollBarPolicy value="31"/>
+          <verticalScrollBarPolicy value="21"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="a3800" class="javax.swing.JTextArea" binding="userMessageField">
             <constraints/>
             <properties/>
           </component>
