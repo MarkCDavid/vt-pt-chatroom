@@ -30,7 +30,7 @@ public class ChatRoomServer {
                         String inputLine;
                         while ((inputLine = connection.read()) != null) {
                             for(Connection c : connections) {
-                                c.write(c.getUsername() + ": " + inputLine);
+                                //c.write(c.getUsername() + ": " + inputLine);
                             }
                         }
                     }
