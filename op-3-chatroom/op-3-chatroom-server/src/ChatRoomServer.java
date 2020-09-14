@@ -1,14 +1,10 @@
-import Network.Message;
-import Network.NetworkMessage;
-import Network.ServerChatMessageNetworkMessage;
+import Network.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
 public class ChatRoomServer {
-
-    static ArrayList<Connection> connections = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
 
@@ -20,29 +16,19 @@ public class ChatRoomServer {
         int port = Integer.parseInt(args[0]);
 
         ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));
+        ProtocolHandler protocolHandler = new ProtocolHandler();
 
         try {
             //noinspection InfiniteLoopStatement
             while(true) {
                 Connection connection = new Connection(serverSocket.accept());
-                connections.add(connection);
+                if (!connection.isValid()) {
+                    System.out.println("Failed to establish connection with the requester " + connection.getAddress());
+                    return;
+                }
 
-                Thread thread = new Thread(() -> {
-                    try {
-                        while(true) {
-                            Thread.sleep(1000);
-                            connection.write(new ServerChatMessageNetworkMessage(new Message("SERVER", "PING")));
-                            System.out.println("PING");
-                            Thread.sleep(1000);
-                            connection.write(new ServerChatMessageNetworkMessage(new Message("SERVER", "PONG")));
-                            System.out.println("PONG");
-                        }
-                    }
-                    catch (IOException | InterruptedException e){
-                        System.out.println("Exception caught when listening for a connection");
-                        System.out.println(e.getMessage());
-                    }
-                });
+                protocolHandler.addConnection(connection);
+                Thread thread = new Thread(protocolHandler.getHandler(connection));
                 thread.start();
             }
         } catch (IOException e) {
@@ -51,4 +37,6 @@ public class ChatRoomServer {
             System.out.println(e.getMessage());
         }
     }
+
+
 }

@@ -42,11 +42,9 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="558ee" class="javax.swing.JEditorPane" binding="chatTextPane">
+          <component id="eccbd" class="javax.swing.JList" binding="chatMessages" custom-create="true">
             <constraints/>
-            <properties>
-              <contentType value="text/plain"/>
-            </properties>
+            <properties/>
           </component>
         </children>
       </scrollpane>

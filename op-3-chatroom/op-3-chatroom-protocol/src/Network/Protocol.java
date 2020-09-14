@@ -48,6 +48,9 @@ public class Protocol {
 
             case ServerChatMessageNetworkMessage.code:
                 return new ServerChatMessageNetworkMessage(bytes);
+
+            case ClientChatMessageNetworkMessage.code:
+                return new ClientChatMessageNetworkMessage(bytes);
         }
 
         // TODO: Consider other solutions

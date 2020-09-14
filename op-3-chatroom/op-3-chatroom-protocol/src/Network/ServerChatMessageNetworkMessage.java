@@ -43,7 +43,7 @@ public class ServerChatMessageNetworkMessage extends NetworkMessage {
         return packed.array();
     }
 
-    public static Message unpack(byte[] bytes) {
+    private static Message unpack(byte[] bytes) {
         int offset = 1;
         int usernameLength = ByteBuffer.wrap(bytes, offset, Integer.BYTES).getInt();
         offset += Integer.BYTES;
