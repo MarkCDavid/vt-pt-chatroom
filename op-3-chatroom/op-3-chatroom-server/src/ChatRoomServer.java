@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -24,18 +22,15 @@ public class ChatRoomServer {
         try {
             //noinspection InfiniteLoopStatement
             while(true) {
-                Socket clientSocket = serverSocket.accept();
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                String username = in.readLine();
-                System.out.println("Username: " + username);
+                Connection connection = new Connection(serverSocket.accept());
+                connections.add(connection);
 
-                connections.add(new Connection(clientSocket, username));
                 Thread thread = new Thread(() -> {
                     try {
                         String inputLine;
-                        while ((inputLine = in.readLine()) != null) {
-                            for(Connection connection : connections) {
-                                connection.writer.println(username + ": " + inputLine);
+                        while ((inputLine = connection.read()) != null) {
+                            for(Connection c : connections) {
+                                c.write(c.getUsername() + ": " + inputLine);
                             }
                         }
                     }
