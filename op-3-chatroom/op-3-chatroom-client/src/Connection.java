@@ -1,31 +1,22 @@
-import Network.*;
+import Network.NetworkMessage;
+import Network.Protocol;
 
 import java.io.*;
 import java.net.Socket;
 
 public class Connection {
 
-    public String getUsername() { return username; }
-
     public Connection(Socket socket) throws IOException {
         this.socket = socket;
         if(!initIO()) return;
-        NetworkMessage message = this.read();
-        if(message instanceof LoginRequestNetworkMessage)
-        {
-            LoginRequestNetworkMessage loginNM = (LoginRequestNetworkMessage)message;
-            this.username = loginNM.getUsername();
-            System.out.println(this.username);
-            this.write(new LoginSuccessNetworkMessage(TokenGenerator.generateToken()));
-        }
-        else {
-            System.out.println("Unknown message!");
-            this.write(new LoginFailureNetworkMessage("Unknown message!"));
-        }
+
     }
 
     public NetworkMessage read() throws IOException {
-        return Protocol.read(this.in);
+        NetworkMessage message = null;
+        while(message == null)
+            message = Protocol.read(this.in);
+        return message;
     }
 
     public void write(NetworkMessage message) throws IOException {
@@ -49,7 +40,6 @@ public class Connection {
         }
     }
 
-    private String username;
     private DataOutputStream out;
     private DataInputStream in;
     private final Socket socket;

@@ -6,7 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
+    <orderEntry type="module" module-name="op-3-chatroom-protocol" exported="" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="op-3-chatroom-protocol" />
   </component>
 </module>

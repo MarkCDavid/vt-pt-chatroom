@@ -7,6 +7,5 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="op-3-chatroom-protocol" />
   </component>
 </module>

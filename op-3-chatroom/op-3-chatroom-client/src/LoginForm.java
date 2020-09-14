@@ -1,11 +1,8 @@
+import Network.*;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -41,36 +38,31 @@ public class LoginForm {
                 }
             }
 
-
-
             try {
                 Socket server = new Socket(host, port);
                 {
-                    PrintWriter out = new PrintWriter(server.getOutputStream(), true);
-                    BufferedReader in = new BufferedReader(new InputStreamReader(server.getInputStream()));
-                    out.println(username);
-                    String unsplit = in.readLine();
-                    String[] serverResponse = unsplit.split(":");
-                    System.out.println(unsplit);
-
-                    if(serverResponse.length == 2){
-                        if(serverResponse[0].equals("success")){
-                            String token = serverResponse[1];
-                            frame.setContentPane(new ChatRoomForm().mainPanel);
-                            frame.pack();
-                            frame.setVisible(true);
-                            frame.setEnabled(true);
-                            frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-                        }
-                        else {
-                            server.close();
-                            JOptionPane.showMessageDialog(null, "Server declined your connection! Reason: " + serverResponse[1]);
-                        }
+                    Connection connection = new Connection(server);
+                    connection.write(new LoginRequestNetworkMessage(username));
+                    NetworkMessage message = connection.read();
+                    if(message instanceof LoginSuccessNetworkMessage) {
+                        LoginSuccessNetworkMessage loginNM = (LoginSuccessNetworkMessage)message;
+                        String token =  loginNM.getToken();
+                        frame.setContentPane(new ChatRoomForm(connection).mainPanel);
+                        frame.pack();
+                        frame.setVisible(true);
+                        frame.setEnabled(true);
+                        frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                    }
+                    else if(message instanceof LoginFailureNetworkMessage) {
+                        connection.close();
+                        LoginFailureNetworkMessage loginNM = (LoginFailureNetworkMessage) message;
+                        JOptionPane.showMessageDialog(null, "Server declined your connection! Reason: " + loginNM.getReason());
                     }
                     else {
-                        server.close();
-                        JOptionPane.showMessageDialog(null, "Unable to understand the server respone!");
+                        connection.close();
+                        JOptionPane.showMessageDialog(null, "Unknown server response!");
                     }
+
                 }
 
 //                Thread readThread = new Thread(() -> {

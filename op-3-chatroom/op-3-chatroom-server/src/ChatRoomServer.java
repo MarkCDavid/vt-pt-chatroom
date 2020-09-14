@@ -1,7 +1,9 @@
+import Network.Message;
+import Network.NetworkMessage;
+import Network.ServerChatMessageNetworkMessage;
+
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 
 public class ChatRoomServer {
@@ -27,14 +29,16 @@ public class ChatRoomServer {
 
                 Thread thread = new Thread(() -> {
                     try {
-                        String inputLine;
-                        while ((inputLine = connection.read()) != null) {
-                            for(Connection c : connections) {
-                                //c.write(c.getUsername() + ": " + inputLine);
-                            }
+                        while(true) {
+                            Thread.sleep(1000);
+                            connection.write(new ServerChatMessageNetworkMessage(new Message("SERVER", "PING")));
+                            System.out.println("PING");
+                            Thread.sleep(1000);
+                            connection.write(new ServerChatMessageNetworkMessage(new Message("SERVER", "PONG")));
+                            System.out.println("PONG");
                         }
                     }
-                    catch (IOException e){
+                    catch (IOException | InterruptedException e){
                         System.out.println("Exception caught when listening for a connection");
                         System.out.println(e.getMessage());
                     }
