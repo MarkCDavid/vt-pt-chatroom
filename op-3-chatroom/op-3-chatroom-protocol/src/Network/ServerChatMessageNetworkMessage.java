@@ -19,20 +19,10 @@ public class ServerChatMessageNetworkMessage extends NetworkMessage {
 
     @Override
     public byte[] pack() {
-        Packer packer = new Packer();
-        packer.packByte(code);
-        packer.packString(getMessage().getUsername());
-        packer.packZonedDateTime(getMessage().getDateTime());
-        packer.packString(getMessage().getData());
-        return packer.getArray();
+        return getMessage().pack(code);
     }
 
     private static Message unpack(byte[] bytes) {
-        Unpacker unpacker = new Unpacker(bytes);
-        unpacker.unpackByte();
-        String username = unpacker.unpackString();
-        ZonedDateTime dateTime = unpacker.unpackZonedDateTime();
-        String data = unpacker.unpackString();
-        return new Message(username, dateTime, data);
+        return Message.unpack(bytes);
     }
 }

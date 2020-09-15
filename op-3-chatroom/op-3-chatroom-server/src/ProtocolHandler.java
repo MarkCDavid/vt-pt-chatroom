@@ -68,7 +68,7 @@ public class ProtocolHandler {
         }
 
         ServerChatMessageNetworkMessage serverChatMessageNM = new ServerChatMessageNetworkMessage(
-                new Message(connection.getUsername(), message.getMessage())
+                new RegularMessage(connection.getUsername(), message.getMessage())
         );
 
         for(Connection c: this.connections) {

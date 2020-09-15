@@ -2,31 +2,36 @@ package Network;
 
 import java.time.*;
 
-public class Message {
+public abstract class Message {
 
-    public String getUsername() {
-        return username;
-    }
-
-    public ZonedDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public Message(String username, ZonedDateTime dateTime, String message) {
-        this.username = username;
+    public Message(ZonedDateTime dateTime, String data) {
         this.dateTime = dateTime;
-        this.data = message;
+        this.data = data;
     }
 
-    public Message(String username, String message) {
-        this(username, ZonedDateTime.now(ZoneOffset.UTC), message);
+    public Message(String data) {
+        this(ZonedDateTime.now(ZoneOffset.UTC), data);
     }
 
-    private final String username;
+    public abstract byte[] pack(byte code);
+
+    public static Message unpack(byte[] bytes) {
+        byte code = bytes[2];
+        switch (code) {
+            case RegularMessage.code:
+                return RegularMessage.unpack(bytes);
+            case DirectMessage.code:
+                return DirectMessage.unpack(bytes);
+            case SystemMessage.code:
+                return SystemMessage.unpack(bytes);
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    public ZonedDateTime getDateTime() { return dateTime; }
+    public String getData() { return data; }
+
     private final ZonedDateTime dateTime;
     private final String data;
 }

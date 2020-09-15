@@ -1,6 +1,8 @@
 import Network.*;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.io.IOException;
 
 public class ChatRoomForm {
@@ -11,8 +13,8 @@ public class ChatRoomForm {
 
     private JTextArea userMessageField;
 
-    private JList<MessageWrapper> chatMessages;
-    private DefaultListModel<MessageWrapper> chatMessagesModel;
+    private JList<Message> chatMessages;
+    private DefaultListModel<Message> chatMessagesModel;
 
     private JList<String> loggedInUsers;
     private DefaultListModel<String> loggedInUsersModel;
@@ -28,14 +30,16 @@ public class ChatRoomForm {
                     NetworkMessage message = this.connection.read();
                     if (message instanceof ServerChatMessageNetworkMessage) {
                         ServerChatMessageNetworkMessage serverChatMessageNM = (ServerChatMessageNetworkMessage) message;
-                        chatMessagesModel.addElement(new MessageWrapper(serverChatMessageNM.getMessage()));
+                        chatMessagesModel.addElement(serverChatMessageNM.getMessage());
                     }
                     else if(message instanceof UserLoggedInNetworkMessage) {
                         UserLoggedInNetworkMessage userLoggedInNM = (UserLoggedInNetworkMessage) message;
+                        chatMessagesModel.addElement(new SystemMessage("User Logged In", userLoggedInNM.getUsername()));
                         loggedInUsersModel.addElement(userLoggedInNM.getUsername());
                     }
                     else if(message instanceof UserLoggedOutNetworkMessage) {
                         UserLoggedOutNetworkMessage userLoggedOutNM = (UserLoggedOutNetworkMessage) message;
+                        chatMessagesModel.addElement(new SystemMessage("User Logged Out", userLoggedOutNM.getUsername()));
                         loggedInUsersModel.removeElement(userLoggedOutNM.getUsername());
                     }
                 }
@@ -64,6 +68,23 @@ public class ChatRoomForm {
                 exception.printStackTrace();
             }
         });
+
+        loggedInUsers.addListSelectionListener(listSelectionEvent -> {
+            String username = loggedInUsers.getSelectedValue();
+            if (username != null) {
+                userMessageField.setText(String.format("/dm %s ", username));
+            }
+            loggedInUsers.clearSelection();
+        });
+
+        chatMessages.addListSelectionListener(listSelectionEvent -> {
+            Message message = chatMessages.getSelectedValue();
+            if(message instanceof RegularMessage) {
+                RegularMessage regularMessage = (RegularMessage) message;
+                userMessageField.setText(String.format("/dm %s ", regularMessage.getUsername()));
+            }
+            chatMessages.clearSelection();
+        });
     }
 
     private void sendLogoutRequest(Connection connection) throws IOException {
@@ -81,7 +102,7 @@ public class ChatRoomForm {
     private void createUIComponents() {
         chatMessagesModel = new DefaultListModel<>();
         chatMessages = new JList<>(chatMessagesModel);
-        chatMessages.setCellRenderer(new MessageWrapperRenderer());
+        chatMessages.setCellRenderer(new MessageRenderer(this.connection.getUsername()));
 
         loggedInUsersModel = new DefaultListModel<>();
         loggedInUsers = new JList<>(loggedInUsersModel);

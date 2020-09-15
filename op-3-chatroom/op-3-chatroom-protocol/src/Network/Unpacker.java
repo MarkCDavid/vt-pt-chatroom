@@ -14,6 +14,10 @@ public class Unpacker {
         this.offset = 0;
     }
 
+    public void skip(int bytes) {
+        this.offset += bytes;
+    }
+
     public byte unpackByte() {
         return this.bytes[this.offset++];
     }

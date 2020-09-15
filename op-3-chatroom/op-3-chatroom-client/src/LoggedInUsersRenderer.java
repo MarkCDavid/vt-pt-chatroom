@@ -27,5 +27,5 @@ public class LoggedInUsersRenderer  extends JLabel implements ListCellRenderer<S
         return this;
 
     }
-    private String username;
+    private final String username;
 }

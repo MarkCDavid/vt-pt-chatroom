@@ -25,7 +25,7 @@ public class LogoutRequestNetworkMessage extends NetworkMessage {
 
     private static String unpack(byte[] bytes) {
         Unpacker unpacker = new Unpacker(bytes);
-        unpacker.unpackByte();
+        unpacker.skip(1);
         return unpacker.unpackString();
     }
 }

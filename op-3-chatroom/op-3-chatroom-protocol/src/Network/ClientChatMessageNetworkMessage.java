@@ -39,7 +39,7 @@ public class ClientChatMessageNetworkMessage extends NetworkMessage {
 
     private static Object[] unpack(byte[] bytes) {
         Unpacker unpacker = new Unpacker(bytes);
-        unpacker.unpackByte();
+        unpacker.skip(1);
         String token = unpacker.unpackString();
         String message = unpacker.unpackString();
         return new Object[] { token, message };
