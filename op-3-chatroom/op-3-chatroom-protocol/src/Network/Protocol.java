@@ -57,6 +57,9 @@ public class Protocol {
 
             case UserLoggedOutNetworkMessage.code:
                 return new UserLoggedOutNetworkMessage(bytes);
+
+            case LogoutRequestNetworkMessage.code:
+                return new LogoutRequestNetworkMessage(bytes);
         }
 
         // TODO: Consider other solutions

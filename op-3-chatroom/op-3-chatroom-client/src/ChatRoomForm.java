@@ -49,15 +49,35 @@ public class ChatRoomForm {
         readThread.start();
 
         submitButton.addActionListener(actionEvent -> {
-            String textMessage = userMessageField.getText();
-            userMessageField.setText("");
-            ClientChatMessageNetworkMessage message = new ClientChatMessageNetworkMessage(connection.getToken(), textMessage);
             try {
-                connection.write(message);
+                sendMessage(connection);
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
         });
+
+        logOutButton.addActionListener(actionEvent -> {
+            try {
+                sendLogoutRequest(connection);
+                connection.close();
+                LoginForm.show(frame);
+
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        });
+    }
+
+    private void sendLogoutRequest(Connection connection) throws IOException {
+        LogoutRequestNetworkMessage message = new LogoutRequestNetworkMessage(connection.getToken());
+        connection.write(message);
+    }
+
+    private void sendMessage(Connection connection) throws IOException {
+        String textMessage = userMessageField.getText();
+        userMessageField.setText("");
+        ClientChatMessageNetworkMessage message = new ClientChatMessageNetworkMessage(connection.getToken(), textMessage);
+        connection.write(message);
     }
 
     private void createUIComponents() {
@@ -66,5 +86,17 @@ public class ChatRoomForm {
 
         loggedInUsersModel = new DefaultListModel<>();
         loggedInUsers = new JList<>(loggedInUsersModel);
+    }
+
+
+    private JFrame frame;
+    public static void show(JFrame frame, Connection connection) {
+        ChatRoomForm form = new ChatRoomForm(connection);
+        form.frame = frame;
+
+        frame.setContentPane(form.mainPanel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
     }
 }

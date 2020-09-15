@@ -1,18 +1,19 @@
 import Network.*;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class LoginForm {
+
     public JPanel mainPanel;
+
     private JTextField usernameField;
     private JTextField serverField;
     private JButton logInButton;
 
-    public LoginForm(JFrame frame) {
+    public LoginForm() {
         logInButton.addActionListener(actionEvent -> {
             String username = usernameField.getText();
 
@@ -49,15 +50,8 @@ public class LoginForm {
                 {
                     Connection connection = new Connection(server, username);
                     if(!connection.isValid()) return;
-
-                    frame.setContentPane(new ChatRoomForm(connection).mainPanel);
-                    frame.pack();
-                    frame.setVisible(true);
-                    frame.setEnabled(true);
-                    frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-
+                    ChatRoomForm.show(frame, connection);
                 }
-
 
             } catch (UnknownHostException e) {
                 JOptionPane.showMessageDialog(null, "Don't know about host " + host);
@@ -66,10 +60,19 @@ public class LoginForm {
             } finally {
                 frame.setEnabled(true);
             }
-
-
-
-
-            });
+        });
     }
+
+
+    private JFrame frame;
+    public static void show(JFrame frame) {
+        LoginForm form = new LoginForm();
+        form.frame = frame;
+
+        frame.setContentPane(form.mainPanel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }
+
 }

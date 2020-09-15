@@ -13,14 +13,14 @@ public class Connection {
     public Connection(Socket socket) throws IOException {
         this.valid = true;
         this.socket = socket;
+        this.address = this.socket.getInetAddress().toString();
+
         System.out.println("Connection request received from " + this.getAddress());
 
         if(!initIO()) {
             System.out.println("Failed to establish I/O with requester " + this.getAddress());
             valid = false;
         }
-
-        this.address = this.socket.getInetAddress().toString();
 
         NetworkMessage message = this.read();
         if(message instanceof LoginRequestNetworkMessage)

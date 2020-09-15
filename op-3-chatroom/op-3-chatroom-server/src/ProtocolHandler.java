@@ -36,6 +36,9 @@ public class ProtocolHandler {
                     if(message instanceof ClientChatMessageNetworkMessage) {
                         ClientChatMessageHandler(connection, (ClientChatMessageNetworkMessage)message);
                     }
+                    else if(message instanceof LogoutRequestNetworkMessage) {
+                        LogoutRequestHandler(connection, (LogoutRequestNetworkMessage)message);
+                    }
                 }
             } catch (IOException e) {
                 System.out.println("IO failed for " + connection.getAddress());
@@ -46,6 +49,15 @@ public class ProtocolHandler {
                 }
             }
         };
+    }
+
+    private void LogoutRequestHandler(Connection connection, LogoutRequestNetworkMessage message) throws IOException {
+        if(!Objects.equals(message.getToken(), connection.getToken())) {
+            System.out.println("Invalid token received for disconnect request for connection " + connection.getAddress() + ". Ignoring.");
+            return;
+        }
+
+        removeConnection(connection);
     }
 
     private void ClientChatMessageHandler(Connection connection, ClientChatMessageNetworkMessage message) throws IOException {
