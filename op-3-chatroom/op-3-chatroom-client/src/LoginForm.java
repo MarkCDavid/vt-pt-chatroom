@@ -16,7 +16,7 @@ public class LoginForm {
     public LoginForm() {
         logInButton.addActionListener(actionEvent -> {
             String username = usernameField.getText();
-
+            // TODO: DISALLOW SPACES IN NAME ??
             if(username.length() < Limits.MIN_USERNAME_LENGTH) {
                 JOptionPane.showMessageDialog(null, "Username too short!");
                 return;

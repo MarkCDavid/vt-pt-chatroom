@@ -16,7 +16,7 @@ public abstract class Message {
     public abstract byte[] pack(byte code);
 
     public static Message unpack(byte[] bytes) {
-        byte code = bytes[2];
+        byte code = bytes[1];
         switch (code) {
             case RegularMessage.code:
                 return RegularMessage.unpack(bytes);

@@ -7,15 +7,11 @@ import java.util.ArrayList;
 public class ChatRoomServer {
 
     public static void main(String[] args) throws IOException {
+        int port = 4444;
+        if (args.length == 1)
+            port = Integer.parseInt(args[0]);
 
-        if (args.length != 1) {
-            System.err.println("Usage: java ChatRoomServer <port>");
-            System.exit(1);
-        }
-
-        int port = Integer.parseInt(args[0]);
-
-        ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));
+        ServerSocket serverSocket = new ServerSocket(port);
         ProtocolHandler protocolHandler = new ProtocolHandler();
 
         try {

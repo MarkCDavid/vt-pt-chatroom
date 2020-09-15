@@ -31,10 +31,21 @@ public class MessageRenderer extends JLabel implements ListCellRenderer<Message>
             displayDirectMessage((DirectMessage)message);
         }
         else if(message instanceof SystemMessage){
-            setText("");
+            displaySystemMessage((SystemMessage) message);
         }
         return this;
 
+    }
+
+
+    // System message
+    // [TIME] | reason | message
+    private void displaySystemMessage(SystemMessage message) {
+        String formatString = "<html>[%s] %s | %s</html>";
+        String time = tag("span", dateTimeFormatter.format(message.getDateTime()), Map.of("color", "#88ee44"));
+        String reason = tag("span", message.getReason(), Map.of("color", "#aa88ff"));
+        String data = tag("span", message.getData(), Map.of("color", "#800000"));
+        setText(String.format(formatString, time, reason, data));
     }
 
     // Direct message
@@ -43,11 +54,11 @@ public class MessageRenderer extends JLabel implements ListCellRenderer<Message>
     // From other:
     // [TIME] <(other) -> (you)>: message
     private void displayDirectMessage(DirectMessage message) {
-        String formatString = "<html>[%s] &lt(%s) -&gt (%s) &gt: %s</html>";
-        String time = tag("span", dateTimeFormatter.format(message.getDateTime()), Map.of("color", "purple"));
-        String from = tag("span", trySwitchUsername(message.getFrom(), "you"), Map.of("color", "purple"));
-        String to = tag("span", trySwitchUsername(message.getTo(), "you"), Map.of("color", "purple"));
-        String data = tag("span", message.getData(), Map.of("color", "purple"));
+        String formatString = "<html>[%s] &lt %s -&gt %s &gt: %s</html>";
+        String time = tag("span", dateTimeFormatter.format(message.getDateTime()), Map.of("color", "#88ee44"));
+            String from = tag("span", trySwitchUsername(message.getFrom(), "you"), Map.of("color", "#aa88ff"));
+        String to = tag("span", trySwitchUsername(message.getTo(), "you"), Map.of("color", "#5511ff"));
+        String data = tag("span", message.getData(), Map.of("color", "#000000"));
         setText(String.format(formatString, time, from, to, data));
     }
 
@@ -55,9 +66,9 @@ public class MessageRenderer extends JLabel implements ListCellRenderer<Message>
     // [TIME] <username>: message
     private void displayRegularMessage(RegularMessage message) {
         String formatString = "<html>[%s] &lt%s&gt: %s</html>";
-        String time = tag("span", dateTimeFormatter.format(message.getDateTime()), Map.of("color", "green"));
-        String username = tag("span", message.getUsername(), Map.of("color", "olive"));
-        String data = tag("span", message.getData(), Map.of("color", "#FF0000"));
+        String time = tag("span", dateTimeFormatter.format(message.getDateTime()), Map.of("color", "#88ee44"));
+        String username = tag("span", message.getUsername(), Map.of("color", "#d2d266"));
+        String data = tag("span", message.getData(), Map.of("color", "#000000"));
         setText(String.format(formatString, time, username, data));
     }
 

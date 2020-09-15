@@ -3,6 +3,8 @@ import Network.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ProtocolHandler {
 
@@ -60,6 +62,7 @@ public class ProtocolHandler {
         removeConnection(connection);
     }
 
+    private static final Pattern dmPattern = Pattern.compile("^(/dm) (\\w+) (.*)");
     private void ClientChatMessageHandler(Connection connection, ClientChatMessageNetworkMessage message) throws IOException {
         if(!Objects.equals(message.getToken(), connection.getToken())) {
             System.out.println("Invalid token received for connection " + connection.getAddress());
@@ -67,13 +70,41 @@ public class ProtocolHandler {
             return;
         }
 
-        ServerChatMessageNetworkMessage serverChatMessageNM = new ServerChatMessageNetworkMessage(
-                new RegularMessage(connection.getUsername(), message.getMessage())
-        );
+        String clientMessage = message.getMessage();
+        Matcher matcher = dmPattern.matcher(clientMessage);
 
-        for(Connection c: this.connections) {
-            c.write(serverChatMessageNM);
+        if(matcher.find()) {
+            String from = connection.getUsername();
+            String to = matcher.group(2);
+            String data = matcher.group(3);
+
+            ServerChatMessageNetworkMessage serverChatMessageNM = new ServerChatMessageNetworkMessage(
+                    new DirectMessage(from, to, data)
+            );
+
+            for(Connection c: this.connections) {
+                if(Objects.equals(c.getUsername(), to)) {
+                    connection.write(serverChatMessageNM);
+                    c.write(serverChatMessageNM);
+                    break;
+                }
+            }
         }
+        else{
+            ServerChatMessageNetworkMessage serverChatMessageNM = new ServerChatMessageNetworkMessage(
+                    new RegularMessage(connection.getUsername(), message.getMessage())
+            );
+
+            for(Connection c: this.connections) {
+                c.write(serverChatMessageNM);
+            }
+        }
+
+
+
+
+
+
     }
 
 
