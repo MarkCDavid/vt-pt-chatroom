@@ -1,7 +1,4 @@
-import Network.ClientChatMessageNetworkMessage;
-import Network.Message;
-import Network.NetworkMessage;
-import Network.ServerChatMessageNetworkMessage;
+import Network.*;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -16,7 +13,9 @@ public class ChatRoomForm {
 
     private JList<String> chatMessages;
     private DefaultListModel<String> chatMessagesModel;
-    private JList<String> loggedInList;
+
+    private JList<String> loggedInUsers;
+    private DefaultListModel<String> loggedInUsersModel;
 
     private final Connection connection;
 
@@ -32,6 +31,14 @@ public class ChatRoomForm {
                         Message chatMessage = serverChatMessageNM.getMessage();
                         String newMessage = "[" + chatMessage.getUsername() + " | " + chatMessage.getDateTime() + "]: " + chatMessage.getData();
                         chatMessagesModel.addElement(newMessage);
+                    }
+                    else if(message instanceof UserLoggedInNetworkMessage) {
+                        UserLoggedInNetworkMessage userLoggedInNM = (UserLoggedInNetworkMessage) message;
+                        loggedInUsersModel.addElement(userLoggedInNM.getUsername());
+                    }
+                    else if(message instanceof UserLoggedOutNetworkMessage) {
+                        UserLoggedOutNetworkMessage userLoggedOutNM = (UserLoggedOutNetworkMessage) message;
+                        loggedInUsersModel.removeElement(userLoggedOutNM.getUsername());
                     }
                 }
             } catch (IOException exception) {
@@ -56,5 +63,8 @@ public class ChatRoomForm {
     private void createUIComponents() {
         chatMessagesModel = new DefaultListModel<>();
         chatMessages = new JList<>(chatMessagesModel);
+
+        loggedInUsersModel = new DefaultListModel<>();
+        loggedInUsers = new JList<>(loggedInUsersModel);
     }
 }

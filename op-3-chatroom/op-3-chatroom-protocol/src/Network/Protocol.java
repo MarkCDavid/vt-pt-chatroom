@@ -51,6 +51,12 @@ public class Protocol {
 
             case ClientChatMessageNetworkMessage.code:
                 return new ClientChatMessageNetworkMessage(bytes);
+
+            case UserLoggedInNetworkMessage.code:
+                return new UserLoggedInNetworkMessage(bytes);
+
+            case UserLoggedOutNetworkMessage.code:
+                return new UserLoggedOutNetworkMessage(bytes);
         }
 
         // TODO: Consider other solutions

@@ -28,6 +28,7 @@ public class Connection {
         if(message instanceof LoginSuccessNetworkMessage) {
             LoginSuccessNetworkMessage loginNM = (LoginSuccessNetworkMessage)message;
             this.token = loginNM.getToken();
+            System.out.println("Connection established with " + this.getAddress());
         }
         else if(message instanceof LoginFailureNetworkMessage) {
             this.close();

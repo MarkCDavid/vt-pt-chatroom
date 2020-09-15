@@ -58,7 +58,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="5e2d5" class="javax.swing.JList" binding="loggedInList">
+          <component id="5e2d5" class="javax.swing.JList" binding="loggedInUsers" custom-create="true">
             <constraints/>
             <properties/>
           </component>

@@ -7,7 +7,7 @@ public class Connection {
 
     public String getUsername() { return username; }
     public String getToken() { return token; }
-    public String getAddress() { return this.socket.getInetAddress().toString(); }
+    public String getAddress() { return address; }
     public boolean isValid() { return valid; }
 
     public Connection(Socket socket) throws IOException {
@@ -19,6 +19,8 @@ public class Connection {
             System.out.println("Failed to establish I/O with requester " + this.getAddress());
             valid = false;
         }
+
+        this.address = this.socket.getInetAddress().toString();
 
         NetworkMessage message = this.read();
         if(message instanceof LoginRequestNetworkMessage)
@@ -97,6 +99,7 @@ public class Connection {
 
     private String username;
     private String token;
+    private String address;
 
     private DataOutputStream out;
     private DataInputStream in;

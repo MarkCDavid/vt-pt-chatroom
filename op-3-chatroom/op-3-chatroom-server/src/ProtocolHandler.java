@@ -1,11 +1,6 @@
-import Network.ClientChatMessageNetworkMessage;
-import Network.Message;
-import Network.NetworkMessage;
-import Network.ServerChatMessageNetworkMessage;
+import Network.*;
 
 import java.io.IOException;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -13,8 +8,23 @@ public class ProtocolHandler {
 
     ArrayList<Connection> connections = new ArrayList<>();
 
-    public void addConnection(Connection connection) {
+    public void addConnection(Connection connection) throws IOException {
+
+        UserLoggedInNetworkMessage userLoggedInNM = new UserLoggedInNetworkMessage(connection.getUsername());
+        connection.write(userLoggedInNM);
+        for(Connection c: connections) {
+            c.write(userLoggedInNM);
+            connection.write(new UserLoggedInNetworkMessage(c.getUsername()));
+        }
         connections.add(connection);
+    }
+
+    public void removeConnection(Connection connection) throws IOException {
+        UserLoggedOutNetworkMessage userLoggedOutNM = new UserLoggedOutNetworkMessage(connection.getUsername());
+        connections.remove(connection);
+        for(Connection c: connections) {
+            c.write(userLoggedOutNM);
+        }
     }
 
     public Runnable getHandler(Connection connection) {
@@ -28,8 +38,12 @@ public class ProtocolHandler {
                     }
                 }
             } catch (IOException e) {
-                System.out.println("Exception caught when listening for a connection");
-                System.out.println(e.getMessage());
+                System.out.println("IO failed for " + connection.getAddress());
+                try {
+                    this.removeConnection(connection);
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
             }
         };
     }
