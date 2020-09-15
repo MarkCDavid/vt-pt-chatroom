@@ -30,30 +30,18 @@ public class ClientChatMessageNetworkMessage extends NetworkMessage {
 
     @Override
     public byte[] pack() {
-        byte[] username = getToken().getBytes(StandardCharsets.UTF_8);
-        byte[] message = getMessage().getBytes(StandardCharsets.UTF_8);
-
-        ByteBuffer packed = ByteBuffer.allocate(Integer.BYTES + username.length + Integer.BYTES + message.length + 1);
-        packed.put(code);
-        packed.putInt(username.length);
-        packed.put(username);
-        packed.putInt(message.length);
-        packed.put(message);
-        return packed.array();
+        Packer packer = new Packer();
+        packer.packByte(code);
+        packer.packString(getToken());
+        packer.packString(getMessage());
+        return packer.getArray();
     }
 
     private static Object[] unpack(byte[] bytes) {
-        int offset = 1;
-        int tokenLength = ByteBuffer.wrap(bytes, offset, Integer.BYTES).getInt();
-        offset += Integer.BYTES;
-
-        String token = new String(bytes, offset, tokenLength, StandardCharsets.UTF_8);
-        offset += tokenLength;
-
-        int messageLength = ByteBuffer.wrap(bytes, offset, Integer.BYTES).getInt();
-        offset += Integer.BYTES;
-
-        String message = new String(bytes, offset, messageLength, StandardCharsets.UTF_8);
+        Unpacker unpacker = new Unpacker(bytes);
+        unpacker.unpackByte();
+        String token = unpacker.unpackString();
+        String message = unpacker.unpackString();
         return new Object[] { token, message };
     }
 }

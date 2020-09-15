@@ -42,7 +42,7 @@ public class ProtocolHandler {
         }
 
         ServerChatMessageNetworkMessage serverChatMessageNM = new ServerChatMessageNetworkMessage(
-                new Message(connection.getUsername(), ZonedDateTime.now(ZoneOffset.UTC), message.getMessage())
+                new Message(connection.getUsername(), message.getMessage())
         );
 
         for(Connection c: this.connections) {

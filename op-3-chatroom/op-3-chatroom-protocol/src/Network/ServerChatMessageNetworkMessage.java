@@ -1,7 +1,6 @@
 package Network;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -26,40 +25,20 @@ public class ServerChatMessageNetworkMessage extends NetworkMessage {
 
     @Override
     public byte[] pack() {
-        Message message = getMessage();
-        byte[] username = message.getUsername().getBytes(StandardCharsets.UTF_8);
-        long dateTime = message.getDateTime().toEpochSecond();
-        System.out.println(dateTime);
-        byte[] data = getMessage().getData().getBytes(StandardCharsets.UTF_8);
-
-        ByteBuffer packed = ByteBuffer.allocate(Integer.BYTES + username.length + Long.BYTES + Integer.BYTES + data.length + 1);
-        packed.put(code);
-        packed.putInt(username.length);
-        packed.put(username);
-        packed.putLong(dateTime);
-        packed.putInt(data.length);
-        packed.put(data);
-
-        return packed.array();
+        Packer packer = new Packer();
+        packer.packByte(code);
+        packer.packString(getMessage().getUsername());
+        packer.packZonedDateTime(getMessage().getDateTime());
+        packer.packString(getMessage().getData());
+        return packer.getArray();
     }
 
     private static Message unpack(byte[] bytes) {
-        int offset = 1;
-        int usernameLength = ByteBuffer.wrap(bytes, offset, Integer.BYTES).getInt();
-        offset += Integer.BYTES;
-
-        String username = new String(bytes, offset, usernameLength, StandardCharsets.UTF_8);
-        offset += usernameLength;
-
-        ZoneId UTCid = ZoneId.of(ZoneOffset.UTC.getId());
-        Instant instant = Instant.ofEpochSecond(ByteBuffer.wrap(bytes, offset, Long.BYTES).getLong());
-        ZonedDateTime dateTime = ZonedDateTime.ofInstant(instant, UTCid);
-        offset += Long.BYTES;
-
-        int dataLength = ByteBuffer.wrap(bytes, offset, Integer.BYTES).getInt();
-        offset += Integer.BYTES;
-
-        String data = new String(bytes, offset, dataLength, StandardCharsets.UTF_8);
+        Unpacker unpacker = new Unpacker(bytes);
+        unpacker.unpackByte();
+        String username = unpacker.unpackString();
+        ZonedDateTime dateTime = unpacker.unpackZonedDateTime();
+        String data = unpacker.unpackString();
         return new Message(username, dateTime, data);
     }
 }

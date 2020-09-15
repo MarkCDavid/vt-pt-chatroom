@@ -12,7 +12,7 @@ public class LoginFailureNetworkMessage extends NetworkMessage {
     }
 
     public LoginFailureNetworkMessage(byte[] bytes) {
-        this(new String(bytes, 1, bytes.length - 1, StandardCharsets.UTF_8));
+        this( unpack(bytes) );
     }
 
     public String getReason() {
@@ -21,10 +21,15 @@ public class LoginFailureNetworkMessage extends NetworkMessage {
 
     @Override
     public byte[] pack() {
-        byte[] username = getReason().getBytes(StandardCharsets.UTF_8);
-        ByteBuffer packed = ByteBuffer.allocate(username.length + 1);
-        packed.put(code);
-        packed.put(username);
-        return packed.array();
+        Packer packer = new Packer();
+        packer.packByte(code);
+        packer.packString(getReason());
+        return packer.getArray();
+    }
+
+    public static String unpack(byte[] bytes) {
+        Unpacker unpacker = new Unpacker(bytes);
+        unpacker.unpackByte();
+        return unpacker.unpackString();
     }
 }

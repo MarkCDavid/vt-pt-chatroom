@@ -12,7 +12,7 @@ public class LoginRequestNetworkMessage extends NetworkMessage {
     }
 
     public LoginRequestNetworkMessage(byte[] bytes) {
-        this(new String(bytes, 1, bytes.length - 1, StandardCharsets.UTF_8));
+        this( unpack(bytes) );
     }
 
     public String getUsername() {
@@ -21,12 +21,16 @@ public class LoginRequestNetworkMessage extends NetworkMessage {
 
     @Override
     public byte[] pack() {
-        byte[] username = getUsername().getBytes(StandardCharsets.UTF_8);
-        ByteBuffer packed = ByteBuffer.allocate(username.length + 1);
-        packed.put(code);
-        packed.put(username);
-        return packed.array();
+        Packer packer = new Packer();
+        packer.packByte(code);
+        packer.packString(getUsername());
+        return packer.getArray();
     }
 
+    public static String unpack(byte[] bytes) {
+        Unpacker unpacker = new Unpacker(bytes);
+        unpacker.unpackByte();
+        return unpacker.unpackString();
+    }
 
 }
