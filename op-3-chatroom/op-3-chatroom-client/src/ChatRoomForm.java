@@ -11,8 +11,8 @@ public class ChatRoomForm {
 
     private JTextArea userMessageField;
 
-    private JList<String> chatMessages;
-    private DefaultListModel<String> chatMessagesModel;
+    private JList<MessageWrapper> chatMessages;
+    private DefaultListModel<MessageWrapper> chatMessagesModel;
 
     private JList<String> loggedInUsers;
     private DefaultListModel<String> loggedInUsersModel;
@@ -28,9 +28,7 @@ public class ChatRoomForm {
                     NetworkMessage message = this.connection.read();
                     if (message instanceof ServerChatMessageNetworkMessage) {
                         ServerChatMessageNetworkMessage serverChatMessageNM = (ServerChatMessageNetworkMessage) message;
-                        Message chatMessage = serverChatMessageNM.getMessage();
-                        String newMessage = "[" + chatMessage.getUsername() + " | " + chatMessage.getDateTime() + "]: " + chatMessage.getData();
-                        chatMessagesModel.addElement(newMessage);
+                        chatMessagesModel.addElement(new MessageWrapper(serverChatMessageNM.getMessage()));
                     }
                     else if(message instanceof UserLoggedInNetworkMessage) {
                         UserLoggedInNetworkMessage userLoggedInNM = (UserLoggedInNetworkMessage) message;
@@ -83,6 +81,7 @@ public class ChatRoomForm {
     private void createUIComponents() {
         chatMessagesModel = new DefaultListModel<>();
         chatMessages = new JList<>(chatMessagesModel);
+        chatMessages.setCellRenderer(new MessageWrapperRenderer());
 
         loggedInUsersModel = new DefaultListModel<>();
         loggedInUsers = new JList<>(loggedInUsersModel);
