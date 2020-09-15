@@ -85,6 +85,7 @@ public class ChatRoomForm {
 
         loggedInUsersModel = new DefaultListModel<>();
         loggedInUsers = new JList<>(loggedInUsersModel);
+        loggedInUsers.setCellRenderer(new LoggedInUsersRenderer(this.connection.getUsername()));
     }
 
 

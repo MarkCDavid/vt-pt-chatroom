@@ -12,10 +12,10 @@ public class MessageWrapperRenderer extends JLabel implements ListCellRenderer<M
             boolean cellFocused) {
 
 
-        setText(String.format("<html><i>[%s | %s]</i>: %s<html>",
+        setText(String.format("<html><span style=\"color:gray;\">[<span style=\"color:red;\">%s</span>| %s]</span>: %s</html>",
                 message.getUsername(),
                 message.getDateTime(),
-                message.getData()
+                message.getData().replaceAll("\n", "<br>")
         ));
         return this;
 
