@@ -1,8 +1,14 @@
+import Colors.ColorsTheme;
+import Colors.SolarizedTheme;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 import java.util.Objects;
 
 public class LoggedInUsersRenderer  extends JLabel implements ListCellRenderer<String>  {
+
+    private final ColorsTheme theme = new SolarizedTheme();
 
     public LoggedInUsersRenderer(String username){
         this.username = username;
@@ -18,10 +24,16 @@ public class LoggedInUsersRenderer  extends JLabel implements ListCellRenderer<S
 
         boolean clientUsername = Objects.equals(this.username, username);
         if(clientUsername) {
-            setText(String.format("<html><span style=\"color:green;\">%s</span> (you)</html>", username));
+            String formatString = "<html> %s %s </html>";
+
+            String data = HTMLFormattingUtils.tag("span", username, Map.of("color", theme.getGreenForeground()));
+            String you = HTMLFormattingUtils.tag("span", "(you)", Map.of("color", theme.getBlackBackground()));
+            setText(String.format(formatString, data, you));
         }
         else {
-            setText(username);
+            String formatString = "<html> %s </html>";
+            String data = HTMLFormattingUtils.tag("span", username, Map.of("color", theme.getBlackBackground()));
+            setText(String.format(formatString, data));
         }
 
         return this;
