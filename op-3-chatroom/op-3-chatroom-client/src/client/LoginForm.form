@@ -53,7 +53,7 @@
           </grid>
         </constraints>
         <properties>
-          <text value="server"/>
+          <text value="Server"/>
         </properties>
       </component>
       <component id="eebdb" class="javax.swing.JButton" binding="logInButton" default-binding="true">

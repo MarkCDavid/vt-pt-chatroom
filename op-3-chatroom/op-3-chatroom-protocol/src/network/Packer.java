@@ -1,63 +1,52 @@
 package network;
 
-import java.nio.ByteBuffer;
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
-import java.util.LinkedList;
-import java.util.List;
 
 public class Packer {
 
     public boolean isFinished() { return this.finished; }
 
     public byte[] getArray() {
-        if(!this.finished) pack();
-        return this.buffer.array();
+        pack();
+        return this.stream.toByteArray();
     }
 
     public Packer() {
-        bufferSize = 0;
-        toPack = new LinkedList<>();
+        this.stream = new ByteArrayOutputStream();
     }
 
-
-    public void packByte(byte _byte){
-
-        if(this.finished) return;
-
-        this.bufferSize += 1;
-
-        this.toPack.add(new byte[] { _byte });
+    public void packByte(byte value){
+        if(this.finished)
+            return;
+        this.stream.write(value);
     }
 
-    public void packString(String string) {
+    public void packInt(int value) {
+        if(this.finished)
+            return;
 
-        if(this.finished) return;
+        this.stream.writeBytes(ByteUtils.intToBytes(value));
+    }
 
-        this.bufferSize += Integer.BYTES;
-        this.bufferSize += string.length();
+    public void packString(String value) {
+        if(this.finished)
+            return;
 
-        this.toPack.add(ByteBuffer.allocate(Integer.BYTES).putInt(string.length()).array());
-        this.toPack.add(string.getBytes(StandardCharsets.UTF_8));
+        packInt(value.length());
+        this.stream.writeBytes(value.getBytes(StandardCharsets.UTF_8));
     }
 
     public void packZonedDateTime(ZonedDateTime dateTime) {
-
         if(this.finished) return;
-
-        this.bufferSize += Long.BYTES;
-
-        this.toPack.add(ByteBuffer.allocate(Long.BYTES).putLong(dateTime.toEpochSecond()).array());
+        stream.writeBytes(ByteUtils.zonedDateTimeToBytes(dateTime));
     }
 
     private void pack() {
         this.finished = true;
-        this.buffer = ByteBuffer.allocate(this.bufferSize);
-        for (byte[] bytes : toPack) this.buffer.put(bytes);
     }
 
-    private int bufferSize;
-    private ByteBuffer buffer;
+    private final ByteArrayOutputStream stream;
     private boolean finished;
-    private final List<byte[]> toPack;
 }
