@@ -10,9 +10,11 @@ public class ChatRoomServer {
         if (args.length == 1)
             port = Integer.parseInt(args[0]);
 
-        try(ServerSocket serverSocket = new ServerSocket(port)) {
-            ProtocolHandler protocolHandler = new ProtocolHandler();
+        ServerSocket serverSocket = new ServerSocket(port);
+        ProtocolHandler protocolHandler = new ProtocolHandler();
 
+        try {
+            //noinspection InfiniteLoopStatement
             while(true) {
                 Connection connection = new Connection(serverSocket.accept());
                 if (!connection.isValid()) {

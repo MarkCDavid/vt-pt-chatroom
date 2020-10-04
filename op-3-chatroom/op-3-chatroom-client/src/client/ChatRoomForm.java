@@ -3,6 +3,8 @@ package client;
 import network.*;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 
 public class ChatRoomForm {
@@ -24,49 +26,45 @@ public class ChatRoomForm {
     public ChatRoomForm(Connection connection) {
         this.connection = connection;
 
-        Thread readThread = new Thread(() -> {
-            try {
-                while(true) {
-                    NetworkMessage message = this.connection.read();
-                    if (message instanceof ServerChatMessageNetworkMessage) {
-                        ServerChatMessageNetworkMessage serverChatMessageNM = (ServerChatMessageNetworkMessage) message;
-                        chatMessagesModel.addElement(serverChatMessageNM.getMessage());
-                    }
-                    else if(message instanceof UserLoggedInNetworkMessage) {
-                        UserLoggedInNetworkMessage userLoggedInNM = (UserLoggedInNetworkMessage) message;
-                        chatMessagesModel.addElement(new SystemMessage("User Logged In", userLoggedInNM.getUsername()));
-                        loggedInUsersModel.addElement(userLoggedInNM.getUsername());
-                    }
-                    else if(message instanceof UserLoggedOutNetworkMessage) {
-                        UserLoggedOutNetworkMessage userLoggedOutNM = (UserLoggedOutNetworkMessage) message;
-                        chatMessagesModel.addElement(new SystemMessage("User Logged Out", userLoggedOutNM.getUsername()));
-                        loggedInUsersModel.removeElement(userLoggedOutNM.getUsername());
-                    }
-                }
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
-        });
+        Thread readThread = new Thread(getMessageHandler());
 
         readThread.start();
 
-        submitButton.addActionListener(actionEvent -> {
-            try {
-                sendMessage(connection);
-            } catch (IOException exception) {
-                exception.printStackTrace();
+        userMessageField.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                handleEnter(e);
+            }
+            @Override
+            public void keyPressed(KeyEvent e) {
+                handleEnter(e);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                // Interface segregation principle violation
+            }
+
+            private void handleEnter(KeyEvent e) {
+                if(e.getKeyCode() != KeyEvent.VK_ENTER)
+                    return;
+
+                if(e.isShiftDown()) {
+                    addNewLineToMessage();
+                }
+                else {
+                    e.consume();
+                    sendMessage(connection);
+                }
             }
         });
 
-        logOutButton.addActionListener(actionEvent -> {
-            try {
-                sendLogoutRequest(connection);
-                connection.close();
-                LoginForm.show(frame);
+        submitButton.addActionListener(actionEvent -> sendMessage(connection));
 
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
+        logOutButton.addActionListener(actionEvent -> {
+            sendLogoutRequest(connection);
+            connection.close();
+            LoginForm.show(frame);
         });
 
         loggedInUsers.addListSelectionListener(listSelectionEvent -> {
@@ -87,16 +85,43 @@ public class ChatRoomForm {
         });
     }
 
-    private void sendLogoutRequest(Connection connection) throws IOException {
+    private Runnable getMessageHandler() {
+        return () -> {
+            while (true) {
+                NetworkMessage message = this.connection.read();
+                if (message instanceof ServerChatMessageNetworkMessage) {
+                    ServerChatMessageNetworkMessage serverChatMessageNM = (ServerChatMessageNetworkMessage) message;
+                    chatMessagesModel.addElement(serverChatMessageNM.getMessage());
+                } else if (message instanceof UserLoggedInNetworkMessage) {
+                    UserLoggedInNetworkMessage userLoggedInNM = (UserLoggedInNetworkMessage) message;
+                    chatMessagesModel.addElement(new SystemMessage("User Logged In", userLoggedInNM.getUsername()));
+                    loggedInUsersModel.addElement(userLoggedInNM.getUsername());
+                } else if (message instanceof UserLoggedOutNetworkMessage) {
+                    UserLoggedOutNetworkMessage userLoggedOutNM = (UserLoggedOutNetworkMessage) message;
+                    chatMessagesModel.addElement(new SystemMessage("User Logged Out", userLoggedOutNM.getUsername()));
+                    loggedInUsersModel.removeElement(userLoggedOutNM.getUsername());
+                }
+                else {
+                    break;
+                }
+            }
+        };
+    }
+
+    private void sendLogoutRequest(Connection connection) {
         LogoutRequestNetworkMessage message = new LogoutRequestNetworkMessage(connection.getToken());
         connection.write(message);
     }
 
-    private void sendMessage(Connection connection) throws IOException {
+    private void sendMessage(Connection connection) {
         String textMessage = userMessageField.getText();
         userMessageField.setText("");
         ClientChatMessageNetworkMessage message = new ClientChatMessageNetworkMessage(connection.getToken(), textMessage);
         connection.write(message);
+    }
+
+    private void addNewLineToMessage() {
+        userMessageField.setText(String.format("%s%n", userMessageField.getText()));
     }
 
     private void createUIComponents() {
@@ -116,7 +141,7 @@ public class ChatRoomForm {
         form.frame = frame;
 
         frame.setContentPane(form.mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }

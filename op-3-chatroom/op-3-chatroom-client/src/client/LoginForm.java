@@ -37,9 +37,8 @@ public class LoginForm {
             }
 
             frame.setEnabled(false);
-
-            try (Socket server = new Socket(address, port)) {
-                Connection connection = new Connection(server, username);
+            try {
+                Connection connection = new Connection(new Socket(address, port), username);
                 if(!connection.isValid()) return;
                 ChatRoomForm.show(frame, connection);
             } catch (UnknownHostException e) {
@@ -59,7 +58,7 @@ public class LoginForm {
         form.frame = frame;
 
         frame.setContentPane(form.mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }

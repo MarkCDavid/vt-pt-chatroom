@@ -30,16 +30,20 @@ public class MessageRenderer extends JLabel implements ListCellRenderer<Message>
             boolean isSelected,
             boolean cellFocused) {
 
-        if(message instanceof RegularMessage) {
-            displayRegularMessage((RegularMessage)message);
+        try {
+
+            if (message instanceof RegularMessage) {
+                displayRegularMessage((RegularMessage) message);
+            } else if (message instanceof DirectMessage) {
+                displayDirectMessage((DirectMessage) message);
+            } else if (message instanceof SystemMessage) {
+                displaySystemMessage((SystemMessage) message);
+            }
+            return this;
         }
-        else if (message instanceof DirectMessage) {
-            displayDirectMessage((DirectMessage)message);
+        catch (Exception exception){
+            return this;
         }
-        else if(message instanceof SystemMessage){
-            displaySystemMessage((SystemMessage) message);
-        }
-        return this;
 
     }
 

@@ -2,6 +2,7 @@ package network;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 
 public class Protocol {
@@ -13,23 +14,29 @@ public class Protocol {
 // Sender [byte[] || message] -> Receiver
 // Receiver -> [read(messageSize)] message
 
-    public static void send(DataOutputStream out, NetworkMessage message) throws IOException {
-        byte[] byteMessage = message.pack();
-        int messageLength = byteMessage.length;
-        out.writeInt(messageLength);
-        out.write(byteMessage);
+    public static int send(DataOutputStream out, NetworkMessage message) {
+        try {
+            byte[] byteMessage = message.pack();
+            out.writeInt(byteMessage.length);
+            out.write(byteMessage);
+            return byteMessage.length;
+        } catch (IOException exception) {
+            return -1;
+        }
     }
 
-    public static NetworkMessage read(DataInputStream in) throws IOException {
-        int messageLength = in.readInt();
-        if(messageLength > 0) {
+    public static NetworkMessage read(DataInputStream in) {
+        try {
+            int messageLength = in.readInt();
+            if(messageLength == 0)
+                return null;
+
             byte[] message = new byte[messageLength];
             in.readFully(message, 0, messageLength);
             return unpack(message);
+        } catch (IOException exception) {
+            return null;
         }
-
-        // TODO: Consider other solutions
-        return null;
     }
 
     // NetworkMessage - first byte defines message type.

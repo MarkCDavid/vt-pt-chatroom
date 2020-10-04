@@ -13,13 +13,13 @@ public class Connection {
     public String getAddress() { return this.socket.getInetAddress().toString(); }
     public boolean isValid() { return valid; }
 
-    public Connection(Socket socket, String username) throws IOException {
+    public Connection(Socket socket, String username) {
         this.valid = true;
         this.socket = socket;
         this.username = username;
         System.out.println("Trying to establish connection to " + this.getAddress());
 
-        if(!this.initIO()) {
+        if(!initIO()) {
             System.out.println("Failed to establish I/O with the server at " + this.getAddress());
             valid = false;
         }
@@ -44,26 +44,16 @@ public class Connection {
 
     }
 
-    public NetworkMessage read() throws IOException {
-        if(valid) {
-            return Protocol.read(this.in);
-        }
-        else{
-            return null;
-        }
+    public NetworkMessage read() {
+        return Protocol.read(this.in);
     }
 
-    public void write(NetworkMessage message) throws IOException {
-        if(valid) {
-            Protocol.send(this.out, message);
-        }
+    public int write(NetworkMessage message) {
+        return Protocol.send(this.out, message);
     }
 
-    public void close() throws IOException {
-        if(socket != null && !socket.isClosed()) {
-            this.closeIO();
-            socket.close();
-        }
+    public void close() {
+        this.closeIO();
     }
 
     private boolean initIO() {
@@ -79,19 +69,30 @@ public class Connection {
 
     private void closeIO() {
         try {
-            if(this.out != null) {
+            if (this.out != null)
                 this.out.close();
-            }
-            if(this.in != null) {
-                this.in.close();
-            }
         }
-        catch (IOException ignored) {
-
-        }
-        finally {
+        catch (IOException exception) {
             valid = false;
         }
+
+        try {
+            if(this.in != null)
+                this.in.close();
+        }
+        catch (IOException exception) {
+            valid = false;
+        }
+
+        try {
+            if(this.socket != null)
+                this.socket.close();
+        }
+        catch (IOException exception) {
+            valid = false;
+        }
+
+        valid = false;
     }
 
     private boolean valid;

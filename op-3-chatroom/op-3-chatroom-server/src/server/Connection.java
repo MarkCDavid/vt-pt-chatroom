@@ -12,12 +12,12 @@ public class Connection {
     public String getAddress() { return address; }
     public boolean isValid() { return valid; }
 
-    public Connection(Socket socket) throws IOException {
+    public Connection(Socket socket) {
         this.valid = true;
         this.socket = socket;
         this.address = this.socket.getInetAddress().toString();
 
-        System.out.println("Server.Connection request received from " + this.getAddress());
+        System.out.println("Connection request received from " + this.getAddress());
 
         if(!initIO()) {
             System.out.println("Failed to establish I/O with requester " + this.getAddress());
@@ -30,7 +30,7 @@ public class Connection {
             LoginRequestNetworkMessage loginNM = (LoginRequestNetworkMessage)message;
             this.username = loginNM.getUsername();
 
-            if(!Limits.validUsernameLength(this.username)) {
+            if(this.username.length() < Limits.MIN_USERNAME_LENGTH || this.username.length() > Limits.MAX_USERNAME_LENGTH) {
                 System.out.println("Requester " + this.getAddress() + " username [" + this.username + "] is invalid!");
                 this.write(new LoginFailureNetworkMessage("Invalid username!"));
                 this.close();
@@ -47,26 +47,16 @@ public class Connection {
         }
     }
 
-    public NetworkMessage read() throws IOException {
-        if(valid) {
-            return Protocol.read(this.in);
-        }
-        else{
-            return null;
-        }
+    public NetworkMessage read()  {
+        return Protocol.read(this.in);
     }
 
-    public void write(NetworkMessage message) throws IOException {
-        if(valid) {
-            Protocol.send(this.out, message);
-        }
+    public int write(NetworkMessage message) {
+        return Protocol.send(this.out, message);
     }
 
-    public void close() throws IOException {
-        if(socket != null && !socket.isClosed()) {
-            this.closeIO();
-            socket.close();
-        }
+    public void close() {
+        this.closeIO();
     }
 
     private boolean initIO() {
@@ -82,19 +72,30 @@ public class Connection {
 
     private void closeIO() {
         try {
-            if(this.out != null) {
+            if (this.out != null)
                 this.out.close();
-            }
-            if(this.in != null) {
-                this.in.close();
-            }
         }
-        catch (IOException ignored) {
-
-        }
-        finally {
+        catch (IOException exception) {
             valid = false;
         }
+
+        try {
+            if(this.in != null)
+                this.in.close();
+        }
+        catch (IOException exception) {
+            valid = false;
+        }
+
+        try {
+            if(this.socket != null)
+                this.socket.close();
+        }
+        catch (IOException exception) {
+            valid = false;
+        }
+
+        valid = false;
     }
 
     private boolean valid;
