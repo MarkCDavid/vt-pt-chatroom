@@ -1,6 +1,7 @@
 package server;
 
 import network.*;
+import network.connection.BaseConnection;
 import network.networkmessage.LoginFailureNetworkMessage;
 import network.networkmessage.LoginRequestNetworkMessage;
 import network.networkmessage.LoginSuccessNetworkMessage;
@@ -9,24 +10,13 @@ import network.networkmessage.NetworkMessage;
 import java.io.*;
 import java.net.Socket;
 
-public class Connection {
+public class Connection extends BaseConnection {
 
     public String getUsername() { return username; }
     public String getToken() { return token; }
-    public String getAddress() { return address; }
-    public boolean isValid() { return valid; }
 
     public Connection(Socket socket) {
-        this.valid = true;
-        this.socket = socket;
-        this.address = this.socket.getInetAddress().toString();
-
-        System.out.println("Connection request received from " + this.getAddress());
-
-        if(!initIO()) {
-            System.out.println("Failed to establish I/O with requester " + this.getAddress());
-            valid = false;
-        }
+        super(socket);
 
         NetworkMessage message = this.read();
         if(message instanceof LoginRequestNetworkMessage)
@@ -51,66 +41,7 @@ public class Connection {
         }
     }
 
-    public NetworkMessage read()  {
-        return Protocol.read(this.in);
-    }
-
-    public int write(NetworkMessage message) {
-        return Protocol.send(this.out, message);
-    }
-
-    public void close() {
-        this.closeIO();
-    }
-
-    private boolean initIO() {
-        try {
-            this.out = new DataOutputStream(this.socket.getOutputStream());
-            this.in = new DataInputStream(this.socket.getInputStream());
-            return true;
-        }
-        catch (IOException exception) {
-            return false;
-        }
-    }
-
-    private void closeIO() {
-        try {
-            if (this.out != null)
-                this.out.close();
-        }
-        catch (IOException exception) {
-            valid = false;
-        }
-
-        try {
-            if(this.in != null)
-                this.in.close();
-        }
-        catch (IOException exception) {
-            valid = false;
-        }
-
-        try {
-            if(this.socket != null)
-                this.socket.close();
-        }
-        catch (IOException exception) {
-            valid = false;
-        }
-
-        valid = false;
-    }
-
-    private boolean valid;
-
     private String username;
     private String token;
-    private final String address;
-
-    private DataOutputStream out;
-    private DataInputStream in;
-
-    private final Socket socket;
 
 }
