@@ -1,4 +1,4 @@
-package network;
+package network.networkmessage;
 
 public abstract class NetworkMessage {
 

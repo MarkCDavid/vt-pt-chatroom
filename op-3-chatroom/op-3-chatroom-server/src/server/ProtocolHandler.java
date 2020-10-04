@@ -1,6 +1,8 @@
 package server;
 
-import network.*;
+import network.message.DirectMessage;
+import network.message.RegularMessage;
+import network.networkmessage.*;
 
 import java.util.ArrayList;
 import java.util.Objects;

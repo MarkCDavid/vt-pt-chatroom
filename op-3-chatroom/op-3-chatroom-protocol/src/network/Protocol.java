@@ -1,8 +1,9 @@
 package network;
 
+import network.networkmessage.*;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
 
 public class Protocol {
@@ -44,28 +45,28 @@ public class Protocol {
         byte messageType = bytes[0];
 
         switch (messageType) {
-            case LoginRequestNetworkMessage.code:
+            case LoginRequestNetworkMessage.CODE:
                 return new LoginRequestNetworkMessage(bytes);
 
-            case LoginFailureNetworkMessage.code:
+            case LoginFailureNetworkMessage.CODE:
                 return new LoginFailureNetworkMessage(bytes);
 
-            case LoginSuccessNetworkMessage.code:
+            case LoginSuccessNetworkMessage.CODE:
                 return new LoginSuccessNetworkMessage(bytes);
 
-            case ServerChatMessageNetworkMessage.code:
+            case ServerChatMessageNetworkMessage.CODE:
                 return new ServerChatMessageNetworkMessage(bytes);
 
-            case ClientChatMessageNetworkMessage.code:
+            case ClientChatMessageNetworkMessage.CODE:
                 return new ClientChatMessageNetworkMessage(bytes);
 
-            case UserLoggedInNetworkMessage.code:
+            case UserLoggedInNetworkMessage.CODE:
                 return new UserLoggedInNetworkMessage(bytes);
 
-            case UserLoggedOutNetworkMessage.code:
+            case UserLoggedOutNetworkMessage.CODE:
                 return new UserLoggedOutNetworkMessage(bytes);
 
-            case LogoutRequestNetworkMessage.code:
+            case LogoutRequestNetworkMessage.CODE:
                 return new LogoutRequestNetworkMessage(bytes);
         }
 

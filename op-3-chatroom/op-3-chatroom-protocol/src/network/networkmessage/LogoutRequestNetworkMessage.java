@@ -1,8 +1,11 @@
-package network;
+package network.networkmessage;
+
+import network.Packer;
+import network.Unpacker;
 
 public class LogoutRequestNetworkMessage extends NetworkMessage {
 
-    public static final byte code = 0x08;
+    public static final byte CODE = 0x08;
 
     public LogoutRequestNetworkMessage(String token) {
         super(new Object[]{token});
@@ -18,7 +21,7 @@ public class LogoutRequestNetworkMessage extends NetworkMessage {
     @Override
     public byte[] pack() {
         Packer packer = new Packer();
-        packer.packByte(code);
+        packer.packByte(CODE);
         packer.packString(getToken());
         return packer.getArray();
     }

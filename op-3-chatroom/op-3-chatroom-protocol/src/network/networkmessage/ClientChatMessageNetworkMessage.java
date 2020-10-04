@@ -1,9 +1,11 @@
-package network;
+package network.networkmessage;
+
+import network.Packer;
+import network.Unpacker;
 
 public class ClientChatMessageNetworkMessage extends NetworkMessage {
 
-
-    public static final byte code = 0x05;
+    public static final byte CODE = 0x05;
 
     public ClientChatMessageNetworkMessage(String token, String message) {
         super(new Object[]{token, message});
@@ -24,7 +26,7 @@ public class ClientChatMessageNetworkMessage extends NetworkMessage {
     @Override
     public byte[] pack() {
         Packer packer = new Packer();
-        packer.packByte(code);
+        packer.packByte(CODE);
         packer.packString(getToken());
         packer.packString(getMessage());
         return packer.getArray();

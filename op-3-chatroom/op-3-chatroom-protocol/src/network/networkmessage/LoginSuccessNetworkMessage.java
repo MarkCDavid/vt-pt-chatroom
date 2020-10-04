@@ -1,8 +1,11 @@
-package network;
+package network.networkmessage;
+
+import network.Packer;
+import network.Unpacker;
 
 public class LoginSuccessNetworkMessage extends NetworkMessage {
 
-    public static final byte code = 0x03;
+    public static final byte CODE = 0x03;
     public LoginSuccessNetworkMessage(String token) {
         super(new Object[]{token});
     }
@@ -18,7 +21,7 @@ public class LoginSuccessNetworkMessage extends NetworkMessage {
     @Override
     public byte[] pack() {
         Packer packer = new Packer();
-        packer.packByte(code);
+        packer.packByte(CODE);
         packer.packString(getToken());
         return packer.getArray();
     }

@@ -1,11 +1,13 @@
 package client;
 
-import network.*;
+import network.message.Message;
+import network.message.RegularMessage;
+import network.message.SystemMessage;
+import network.networkmessage.*;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 
 public class ChatRoomForm {
     public JPanel mainPanel;

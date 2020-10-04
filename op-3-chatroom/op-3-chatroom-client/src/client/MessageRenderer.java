@@ -2,10 +2,10 @@ package client;
 
 import colors.ColorsTheme;
 import colors.SolarizedTheme;
-import network.DirectMessage;
-import network.Message;
-import network.RegularMessage;
-import network.SystemMessage;
+import network.message.DirectMessage;
+import network.message.Message;
+import network.message.RegularMessage;
+import network.message.SystemMessage;
 
 import javax.swing.*;
 import java.awt.*;

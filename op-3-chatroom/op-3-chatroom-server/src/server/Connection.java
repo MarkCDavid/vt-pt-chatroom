@@ -1,6 +1,10 @@
 package server;
 
 import network.*;
+import network.networkmessage.LoginFailureNetworkMessage;
+import network.networkmessage.LoginRequestNetworkMessage;
+import network.networkmessage.LoginSuccessNetworkMessage;
+import network.networkmessage.NetworkMessage;
 
 import java.io.*;
 import java.net.Socket;

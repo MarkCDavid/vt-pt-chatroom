@@ -1,8 +1,10 @@
-package network;
+package network.networkmessage;
+
+import network.message.Message;
 
 public class ServerChatMessageNetworkMessage extends NetworkMessage {
 
-    public static final byte code = 0x04;
+    public static final byte CODE = 0x04;
 
     public ServerChatMessageNetworkMessage(Message message) {
         super( new Object[] {message} );
@@ -18,7 +20,7 @@ public class ServerChatMessageNetworkMessage extends NetworkMessage {
 
     @Override
     public byte[] pack() {
-        return getMessage().pack(code);
+        return getMessage().pack(CODE);
     }
 
     private static Message unpack(byte[] bytes) {

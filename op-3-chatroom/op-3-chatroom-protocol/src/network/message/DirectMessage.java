@@ -1,10 +1,13 @@
-package network;
+package network.message;
+
+import network.Packer;
+import network.Unpacker;
 
 import java.time.ZonedDateTime;
 
 public class DirectMessage extends Message {
 
-    public final static byte code = 0x01;
+    public static final byte CODE = 0x01;
 
     public String getFrom() {
         return from;
@@ -33,7 +36,7 @@ public class DirectMessage extends Message {
     public byte[] pack(byte messageCode) {
         Packer packer = new Packer();
         packer.packByte(messageCode);
-        packer.packByte(code);
+        packer.packByte(CODE);
         packer.packString(getFrom());
         packer.packString(getTo());
         packer.packZonedDateTime(getDateTime());

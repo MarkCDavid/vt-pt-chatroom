@@ -1,8 +1,11 @@
-package network;
+package network.networkmessage;
+
+import network.Packer;
+import network.Unpacker;
 
 public class UserLoggedOutNetworkMessage extends NetworkMessage {
 
-    public static final byte code = 0x07;
+    public static final byte CODE = 0x07;
 
     public UserLoggedOutNetworkMessage(String username) {
         super(new Object[]{ username });
@@ -19,7 +22,7 @@ public class UserLoggedOutNetworkMessage extends NetworkMessage {
     @Override
     public byte[] pack() {
         Packer packer = new Packer();
-        packer.packByte(code);
+        packer.packByte(CODE);
         packer.packString(getUsername());
         return packer.getArray();
     }

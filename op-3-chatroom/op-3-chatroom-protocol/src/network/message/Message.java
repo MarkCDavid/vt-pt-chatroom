@@ -1,4 +1,4 @@
-package network;
+package network.message;
 
 import java.time.*;
 
@@ -17,16 +17,12 @@ public abstract class Message {
 
     public static Message unpack(byte[] bytes) {
         byte code = bytes[1];
-        switch (code) {
-            case RegularMessage.code:
-                return RegularMessage.unpack(bytes);
-            case DirectMessage.code:
-                return DirectMessage.unpack(bytes);
-            case SystemMessage.code:
-                return SystemMessage.unpack(bytes);
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (code) {
+            case RegularMessage.CODE -> RegularMessage.unpack(bytes);
+            case DirectMessage.CODE -> DirectMessage.unpack(bytes);
+            case SystemMessage.CODE -> SystemMessage.unpack(bytes);
+            default -> throw new IllegalArgumentException();
+        };
     }
 
     public ZonedDateTime getDateTime() { return dateTime; }

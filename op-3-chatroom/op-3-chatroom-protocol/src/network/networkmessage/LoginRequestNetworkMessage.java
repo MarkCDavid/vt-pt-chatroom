@@ -1,14 +1,17 @@
-package network;
+package network.networkmessage;
 
-public class UserLoggedInNetworkMessage extends NetworkMessage {
+import network.Packer;
+import network.Unpacker;
 
-    public static final byte code = 0x06;
+public class LoginRequestNetworkMessage extends NetworkMessage {
 
-    public UserLoggedInNetworkMessage(String username) {
+    public static final byte CODE = 0x01;
+
+    public LoginRequestNetworkMessage(String username) {
         super(new Object[]{ username });
     }
 
-    public UserLoggedInNetworkMessage(byte[] bytes) {
+    public LoginRequestNetworkMessage(byte[] bytes) {
         this( unpack(bytes) );
     }
 
@@ -19,14 +22,15 @@ public class UserLoggedInNetworkMessage extends NetworkMessage {
     @Override
     public byte[] pack() {
         Packer packer = new Packer();
-        packer.packByte(code);
+        packer.packByte(CODE);
         packer.packString(getUsername());
         return packer.getArray();
     }
 
-    private static String unpack(byte[] bytes) {
+    public static String unpack(byte[] bytes) {
         Unpacker unpacker = new Unpacker(bytes);
-        unpacker.skip(1);
+        unpacker.skip(1);;
         return unpacker.unpackString();
     }
+
 }

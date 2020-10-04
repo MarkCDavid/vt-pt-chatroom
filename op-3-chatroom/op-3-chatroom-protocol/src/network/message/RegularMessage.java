@@ -1,11 +1,14 @@
-package network;
+package network.message;
 
+
+import network.Packer;
+import network.Unpacker;
 
 import java.time.ZonedDateTime;
 
 public final class RegularMessage extends Message {
 
-    public final static byte code = 0x00;
+    public static final byte CODE = 0x00;
 
     public String getUsername() {
         return username;
@@ -27,7 +30,7 @@ public final class RegularMessage extends Message {
     public byte[] pack(byte messageCode) {
         Packer packer = new Packer();
         packer.packByte(messageCode);
-        packer.packByte(code);
+        packer.packByte(CODE);
         packer.packString(getUsername());
         packer.packZonedDateTime(getDateTime());
         packer.packString(getData());

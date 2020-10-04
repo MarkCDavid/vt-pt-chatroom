@@ -1,6 +1,10 @@
 package client;
 
 import network.*;
+import network.networkmessage.LoginFailureNetworkMessage;
+import network.networkmessage.LoginRequestNetworkMessage;
+import network.networkmessage.LoginSuccessNetworkMessage;
+import network.networkmessage.NetworkMessage;
 
 import javax.swing.*;
 import java.io.*;

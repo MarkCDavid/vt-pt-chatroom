@@ -1,8 +1,11 @@
-package network;
+package network.networkmessage;
+
+import network.Packer;
+import network.Unpacker;
 
 public class LoginFailureNetworkMessage extends NetworkMessage {
 
-    public static final byte code = 0x02;
+    public static final byte CODE = 0x02;
 
     public LoginFailureNetworkMessage(String reason) {
         super(new Object[]{reason});
@@ -19,7 +22,7 @@ public class LoginFailureNetworkMessage extends NetworkMessage {
     @Override
     public byte[] pack() {
         Packer packer = new Packer();
-        packer.packByte(code);
+        packer.packByte(CODE);
         packer.packString(getReason());
         return packer.getArray();
     }

@@ -1,10 +1,13 @@
-package network;
+package network.message;
+
+import network.Packer;
+import network.Unpacker;
 
 import java.time.ZonedDateTime;
 
 public class SystemMessage extends Message {
 
-    public final static byte code = 0x02;
+    public static final byte CODE = 0x02;
 
     public String getReason() {
         return reason;
@@ -26,7 +29,7 @@ public class SystemMessage extends Message {
     public byte[] pack(byte messageCode) {
         Packer packer = new Packer();
         packer.packByte(messageCode);
-        packer.packByte(code);
+        packer.packByte(CODE);
         packer.packString(getReason());
         packer.packZonedDateTime(getDateTime());
         packer.packString(getData());
