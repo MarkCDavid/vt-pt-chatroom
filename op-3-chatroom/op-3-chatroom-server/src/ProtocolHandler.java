@@ -36,10 +36,10 @@ public class ProtocolHandler {
                 while (true) {
                     NetworkMessage message = connection.read();
                     if(message instanceof ClientChatMessageNetworkMessage) {
-                        ClientChatMessageHandler(connection, (ClientChatMessageNetworkMessage)message);
+                        clientChatMessageHandler(connection, (ClientChatMessageNetworkMessage)message);
                     }
                     else if(message instanceof LogoutRequestNetworkMessage) {
-                        LogoutRequestHandler(connection, (LogoutRequestNetworkMessage)message);
+                        logoutRequestHandler(connection, (LogoutRequestNetworkMessage)message);
                     }
                 }
             } catch (IOException e) {
@@ -53,7 +53,7 @@ public class ProtocolHandler {
         };
     }
 
-    private void LogoutRequestHandler(Connection connection, LogoutRequestNetworkMessage message) throws IOException {
+    private void logoutRequestHandler(Connection connection, LogoutRequestNetworkMessage message) throws IOException {
         if(!Objects.equals(message.getToken(), connection.getToken())) {
             System.out.println("Invalid token received for disconnect request for connection " + connection.getAddress() + ". Ignoring.");
             return;
@@ -63,7 +63,7 @@ public class ProtocolHandler {
     }
 
     private static final Pattern dmPattern = Pattern.compile("^(/dm) (\\w+) (.*)");
-    private void ClientChatMessageHandler(Connection connection, ClientChatMessageNetworkMessage message) throws IOException {
+    private void clientChatMessageHandler(Connection connection, ClientChatMessageNetworkMessage message) throws IOException {
         if(!Objects.equals(message.getToken(), connection.getToken())) {
             System.out.println("Invalid token received for connection " + connection.getAddress());
             connection.close();
@@ -99,13 +99,5 @@ public class ProtocolHandler {
                 c.write(serverChatMessageNM);
             }
         }
-
-
-
-
-
-
     }
-
-
 }

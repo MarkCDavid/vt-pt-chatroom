@@ -12,14 +12,16 @@ public class HTMLFormattingUtils {
 
     private static String buildStyles(Map<String, String> css) {
         StringBuilder builder = new StringBuilder();
-        for(String key: css.keySet())
+        for(Map.Entry<String, String> entry: css.entrySet())
         {
-            builder.append(key);
+            builder.append(entry.getKey());
             builder.append(":");
-            builder.append(css.get(key));
+            builder.append(entry.getValue());
             builder.append(";");
         }
         return builder.toString();
     }
+
+    private HTMLFormattingUtils() { }
 
 }

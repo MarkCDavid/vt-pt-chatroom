@@ -99,7 +99,7 @@ public class Connection {
 
     private String username;
     private String token;
-    private String address;
+    private final String address;
 
     private DataOutputStream out;
     private DataInputStream in;

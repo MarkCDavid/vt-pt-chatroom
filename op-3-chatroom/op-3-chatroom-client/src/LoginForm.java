@@ -12,51 +12,38 @@ public class LoginForm {
     private JTextField usernameField;
     private JTextField serverField;
     private JButton logInButton;
+    private JTextField portField;
 
     public LoginForm() {
         logInButton.addActionListener(actionEvent -> {
             String username = usernameField.getText();
-            // TODO: DISALLOW SPACES IN NAME ??
-            if(username.length() < Limits.MIN_USERNAME_LENGTH) {
-                JOptionPane.showMessageDialog(null, "Username too short!");
-                return;
-            }
 
-            if(username.length() > Limits.MAX_USERNAME_LENGTH) {
-                JOptionPane.showMessageDialog(null, "Username too long!");
+            if(!Limits.validUsernameLength(username)) {
+                JOptionPane.showMessageDialog(null, "Username too long or too short!");
                 return;
             }
 
             String address = serverField.getText();
-            if(address.length() == 0) address = "localhost:4444";
+            if(address.length() == 0) address = "localhost";
+
+            int port;
+            try {
+                port = Integer.parseInt(portField.getText());
+            }
+            catch (NumberFormatException exception) {
+                port = 4444;
+            }
 
             frame.setEnabled(false);
 
-            String[] result = address.split(":");
-            String host = result[0];
-            int port = 4444;
-            if(result.length == 2) {
-                try {
-                    port = Integer.parseInt(result[1]);
-                }
-                catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Port " + result[1] + " is invalid!");
-                    return;
-                }
-            }
-
-            try {
-                Socket server = new Socket(host, port);
-                {
-                    Connection connection = new Connection(server, username);
-                    if(!connection.isValid()) return;
-                    ChatRoomForm.show(frame, connection);
-                }
-
+            try (Socket server = new Socket(address, port)) {
+                Connection connection = new Connection(server, username);
+                if(!connection.isValid()) return;
+                ChatRoomForm.show(frame, connection);
             } catch (UnknownHostException e) {
-                JOptionPane.showMessageDialog(null, "Don't know about host " + host);
+                JOptionPane.showMessageDialog(null, "Don't know about host " + address);
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Couldn't get I/O for the connection to " + host);
+                JOptionPane.showMessageDialog(null, "Couldn't get I/O for the connection to " + address);
             } finally {
                 frame.setEnabled(true);
             }
