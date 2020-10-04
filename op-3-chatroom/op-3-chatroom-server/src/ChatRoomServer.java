@@ -14,7 +14,6 @@ public class ChatRoomServer {
         try(ServerSocket serverSocket = new ServerSocket(port)) {
             ProtocolHandler protocolHandler = new ProtocolHandler();
 
-            //noinspection InfiniteLoopStatement
             while(true) {
                 Connection connection = new Connection(serverSocket.accept());
                 if (!connection.isValid()) {

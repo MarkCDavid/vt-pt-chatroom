@@ -19,7 +19,7 @@ public class LoginForm {
             String username = usernameField.getText();
 
             if(!Limits.validUsernameLength(username)) {
-                JOptionPane.showMessageDialog(null, "Username too long or too short!");
+                JOptionPane.showMessageDialog(null, String.format("Username too long (%s) or too short (%s)!", Limits.MAX_USERNAME_LENGTH, Limits.MIN_USERNAME_LENGTH));
                 return;
             }
 
@@ -41,9 +41,9 @@ public class LoginForm {
                 if(!connection.isValid()) return;
                 ChatRoomForm.show(frame, connection);
             } catch (UnknownHostException e) {
-                JOptionPane.showMessageDialog(null, "Don't know about host " + address);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Couldn't get I/O for the connection to " + address);
+                JOptionPane.showMessageDialog(null, String.format("Don't know about host %s:%s", address, port));
+            } catch (IOException | IllegalArgumentException e) {
+                JOptionPane.showMessageDialog(null, String.format("Couldn't get I/O for the connection to %s:%s", address, port));
             } finally {
                 frame.setEnabled(true);
             }

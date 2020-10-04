@@ -28,7 +28,7 @@ public class Connection {
             LoginRequestNetworkMessage loginNM = (LoginRequestNetworkMessage)message;
             this.username = loginNM.getUsername();
 
-            if(this.username.length() < Limits.MIN_USERNAME_LENGTH || this.username.length() > Limits.MAX_USERNAME_LENGTH) {
+            if(!Limits.validUsernameLength(this.username)) {
                 System.out.println("Requester " + this.getAddress() + " username [" + this.username + "] is invalid!");
                 this.write(new LoginFailureNetworkMessage("Invalid username!"));
                 this.close();
