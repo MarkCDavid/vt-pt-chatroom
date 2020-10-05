@@ -15,6 +15,9 @@ import java.util.Objects;
 
 public class ClientChatMessageHandler extends NetworkMessageHandler<Connection, ClientChatMessageNetworkMessage> {
 
+    private final List<Command> commands;
+    private final ServerContext context;
+
     public ClientChatMessageHandler(ServerContext context) {
         this.context = context;
         this.commands = new ArrayList<>();
@@ -23,32 +26,29 @@ public class ClientChatMessageHandler extends NetworkMessageHandler<Connection, 
 
     @Override
     protected void handleCore(Connection connection, ClientChatMessageNetworkMessage message) {
-        if(!Objects.equals(message.getToken(), connection.getToken())) {
+        if (!Objects.equals(message.getToken(), connection.getToken())) {
             System.out.printf("Invalid token received for connection %s.%n", connection.getAddress());
             connection.close();
             return;
         }
 
-        for(Command command: commands) {
-            if(command.match(connection, message.getMessage())) {
+        for (Command command : commands) {
+            if (command.match(connection, message.getMessage())) {
                 message.setHandled();
                 break;
             }
         }
 
-        if(message.isHandled())
+        if (message.isHandled())
             return;
 
         RegularMessage regularMessage = new RegularMessage(connection.getUsername(), message.getMessage());
         ServerChatMessageNetworkMessage chatMessage = new ServerChatMessageNetworkMessage(regularMessage);
 
-        for(Connection c: context.getConnections()) {
+        for (Connection c : context.getConnections()) {
             c.write(chatMessage);
         }
 
         message.setHandled();
     }
-
-    private final List<Command> commands;
-    private final ServerContext context;
 }

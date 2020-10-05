@@ -7,11 +7,15 @@ public class ServerChatMessageNetworkMessage extends NetworkMessage {
     public static final byte CODE = 0x04;
 
     public ServerChatMessageNetworkMessage(Message message) {
-        super( new Object[] {message} );
+        super(new Object[]{message});
     }
 
     public ServerChatMessageNetworkMessage(byte[] bytes) {
-        this( unpack(bytes) );
+        this(unpack(bytes));
+    }
+
+    private static Message unpack(byte[] bytes) {
+        return Message.unpack(bytes);
     }
 
     public Message getMessage() {
@@ -21,9 +25,5 @@ public class ServerChatMessageNetworkMessage extends NetworkMessage {
     @Override
     public byte[] pack() {
         return getMessage().pack(CODE);
-    }
-
-    private static Message unpack(byte[] bytes) {
-        return Message.unpack(bytes);
     }
 }

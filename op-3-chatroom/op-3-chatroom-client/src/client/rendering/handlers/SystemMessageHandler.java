@@ -12,6 +12,11 @@ import java.util.Map;
 
 public class SystemMessageHandler extends MessageHandler<SystemMessage> {
 
+    private static final String FORMAT_STRING = "<html>[%s] %s | %s</html>";
+    private final JLabel label;
+    private final ColorsTheme theme;
+    private final DateTimeFormatter dateTimeFormatter;
+
     public SystemMessageHandler(JLabel label, ColorsTheme theme) {
         this.label = label;
         this.theme = theme;
@@ -29,10 +34,4 @@ public class SystemMessageHandler extends MessageHandler<SystemMessage> {
     private String spanWithColor(String value, String color) {
         return HTMLFormattingUtils.tag("span", value, Map.of("color", color));
     }
-
-    private static final String FORMAT_STRING = "<html>[%s] %s | %s</html>";
-
-    private final JLabel label;
-    private final ColorsTheme theme;
-    private final DateTimeFormatter dateTimeFormatter;
 }

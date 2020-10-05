@@ -7,6 +7,9 @@ import java.io.IOException;
 
 public class Protocol {
 
+    private Protocol() {
+    }
+
     public static int send(IO io, NetworkMessage message) {
         try {
             byte[] byteMessage = message.pack();
@@ -21,7 +24,7 @@ public class Protocol {
     public static NetworkMessage read(IO io) {
         try {
             int messageLength = io.getIn().readInt();
-            if(messageLength == 0)
+            if (messageLength == 0)
                 return null;
 
             byte[] message = new byte[messageLength];
@@ -32,7 +35,7 @@ public class Protocol {
         }
     }
 
-    public static NetworkMessage unpack(byte[] bytes){
+    public static NetworkMessage unpack(byte[] bytes) {
         return switch (bytes[0]) {
             case LoginRequestNetworkMessage.CODE -> new LoginRequestNetworkMessage(bytes);
             case LoginFailureNetworkMessage.CODE -> new LoginFailureNetworkMessage(bytes);
@@ -45,6 +48,4 @@ public class Protocol {
             default -> null;
         };
     }
-
-    private Protocol() { }
 }

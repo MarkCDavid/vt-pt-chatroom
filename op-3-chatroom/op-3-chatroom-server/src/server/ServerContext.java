@@ -12,6 +12,8 @@ import java.util.List;
 
 public class ServerContext {
 
+    private final List<Connection> connections;
+
     public ServerContext() {
         this.connections = Collections.synchronizedList(new ArrayList<>());
     }
@@ -23,7 +25,7 @@ public class ServerContext {
     public void addConnection(Connection connection) {
         UserLoggedInNetworkMessage userLoggedInMessage = new UserLoggedInNetworkMessage(connection.getUsername());
         connection.write(userLoggedInMessage);
-        for(Connection c: connections) {
+        for (Connection c : connections) {
             c.write(userLoggedInMessage);
             connection.write(new UserLoggedInNetworkMessage(c.getUsername()));
         }
@@ -32,10 +34,10 @@ public class ServerContext {
 
     public void removeConnection(Connection connection) {
         UserLoggedOutNetworkMessage userLoggedOutMessage = new UserLoggedOutNetworkMessage(connection.getUsername());
-        if(!connections.remove(connection))
+        if (!connections.remove(connection))
             return;
 
-        for(Connection c: connections) {
+        for (Connection c : connections) {
             c.write(userLoggedOutMessage);
         }
     }
@@ -49,7 +51,7 @@ public class ServerContext {
 
             while (true) {
                 NetworkMessage message = connection.read();
-                if(message == null || !proxy.proxy(connection, message)) {
+                if (message == null || !proxy.proxy(connection, message)) {
                     closeConnection(connection);
                     break;
                 }
@@ -62,6 +64,4 @@ public class ServerContext {
         this.removeConnection(connection);
         System.out.printf("Connection with %s lost.%n", connection.getAddress());
     }
-
-    private final List<Connection> connections;
 }

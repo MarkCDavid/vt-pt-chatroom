@@ -8,7 +8,10 @@ import network.networkmessage.LoginSuccessNetworkMessage;
 import server.Connection;
 import server.ServerContext;
 import server.TokenGenerator;
+
 public class LoginRequestHandler extends NetworkMessageHandler<Connection, LoginRequestNetworkMessage> {
+
+    private final ServerContext context;
 
     public LoginRequestHandler(ServerContext context) {
         this.context = context;
@@ -18,13 +21,12 @@ public class LoginRequestHandler extends NetworkMessageHandler<Connection, Login
     protected void handleCore(Connection connection, LoginRequestNetworkMessage message) {
         connection.setUsername(message.getUsername());
 
-        if(Limits.validUsernameLength(connection.getUsername())) {
+        if (Limits.validUsernameLength(connection.getUsername())) {
             connection.setToken(TokenGenerator.generateToken());
             connection.write(new LoginSuccessNetworkMessage(connection.getToken()));
             context.addConnection(connection);
 
-        }
-        else {
+        } else {
             System.out.printf("Requester %s username '%s' is invalid!%n", connection.getAddress(), connection.getUsername());
             connection.write(new LoginFailureNetworkMessage("Invalid username!"));
             connection.close();
@@ -32,6 +34,4 @@ public class LoginRequestHandler extends NetworkMessageHandler<Connection, Login
 
         message.setHandled();
     }
-
-    private final ServerContext context;
 }

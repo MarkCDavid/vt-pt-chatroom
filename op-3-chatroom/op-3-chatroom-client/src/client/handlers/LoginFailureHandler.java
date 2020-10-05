@@ -13,5 +13,4 @@ public class LoginFailureHandler extends NetworkMessageHandler<Connection, Login
         connection.close();
         JOptionPane.showMessageDialog(null, "Server declined your connection! Reason: " + message.getReason());
     }
-
 }

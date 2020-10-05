@@ -5,40 +5,37 @@ import java.util.List;
 
 public class ArgumentParser {
 
+    private final char[] argumentString;
+    private final List<String> arguments;
+    private boolean isQuote;
+    private boolean finished;
     public ArgumentParser(String argumentString) {
         this.argumentString = argumentString.trim().toCharArray();
         this.arguments = new ArrayList<>();
     }
 
     public List<String> parse() {
-        if(finished)
+        if (finished)
             return arguments;
 
         StringBuilder builder = new StringBuilder();
-        for(char character: argumentString) {
+        for (char character : argumentString) {
 
-            if(!isQuote && character == ' '){
+            if (!isQuote && character == ' ') {
                 arguments.add(builder.toString());
                 builder = new StringBuilder();
-            }
-            else if(character == '"') {
+            } else if (character == '"') {
                 isQuote = !isQuote;
-            }
-            else {
+            } else {
                 builder.append(character);
             }
         }
         arguments.add(builder.toString());
 
-        if(isQuote)
+        if (isQuote)
             throw new ArgumentParsingException();
 
         finished = true;
         return arguments;
     }
-
-    private boolean isQuote;
-    private boolean finished;
-    private final char[] argumentString;
-    private final List<String> arguments;
 }

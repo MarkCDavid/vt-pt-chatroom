@@ -12,7 +12,13 @@ public class LoginFailureNetworkMessage extends NetworkMessage {
     }
 
     public LoginFailureNetworkMessage(byte[] bytes) {
-        this( unpack(bytes) );
+        this(unpack(bytes));
+    }
+
+    public static String unpack(byte[] bytes) {
+        Unpacker unpacker = new Unpacker(bytes);
+        unpacker.skip(1);
+        return unpacker.unpackString();
     }
 
     public String getReason() {
@@ -25,11 +31,5 @@ public class LoginFailureNetworkMessage extends NetworkMessage {
         packer.packByte(CODE);
         packer.packString(getReason());
         return packer.getArray();
-    }
-
-    public static String unpack(byte[] bytes) {
-        Unpacker unpacker = new Unpacker(bytes);
-        unpacker.skip(1);
-        return unpacker.unpackString();
     }
 }

@@ -5,6 +5,9 @@ import java.time.ZonedDateTime;
 
 public class Unpacker {
 
+    private final byte[] bytes;
+    private int offset;
+
     public Unpacker(byte[] bytes) {
         this.bytes = bytes;
         this.offset = 0;
@@ -21,8 +24,7 @@ public class Unpacker {
     public int unpackInt() {
         try {
             return ByteUtils.intFromBytes(bytes, offset);
-        }
-        finally {
+        } finally {
             offset += Integer.BYTES;
         }
     }
@@ -31,22 +33,16 @@ public class Unpacker {
         int length = unpackInt();
         try {
             return new String(bytes, offset, length, StandardCharsets.UTF_8);
-        }
-        finally {
+        } finally {
             offset += length;
         }
     }
 
-
     public ZonedDateTime unpackZonedDateTime() {
         try {
             return ByteUtils.zonedDateTimeFromBytes(bytes, offset);
-        }
-        finally {
+        } finally {
             offset += Long.BYTES;
         }
     }
-
-    private int offset;
-    private final byte[] bytes;
 }

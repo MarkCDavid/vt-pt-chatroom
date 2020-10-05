@@ -9,6 +9,8 @@ import java.util.Queue;
 
 public class ServerChatMessageHandler extends NetworkMessageHandler<Connection, ServerChatMessageNetworkMessage> {
 
+    private final Queue<Message> model;
+
     public ServerChatMessageHandler(Queue<Message> model) {
         this.model = model;
     }
@@ -18,6 +20,4 @@ public class ServerChatMessageHandler extends NetworkMessageHandler<Connection, 
         model.add(message.getMessage());
         message.setHandled();
     }
-
-    private final Queue<Message> model;
 }

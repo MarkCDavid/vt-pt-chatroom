@@ -6,6 +6,13 @@ import java.net.Socket;
 
 public class Connection extends BaseConnection {
 
+    private String username;
+    private String token;
+
+    public Connection(Socket socket) {
+        super(socket);
+    }
+
     public String getUsername() {
         return username;
     }
@@ -21,12 +28,4 @@ public class Connection extends BaseConnection {
     public void setToken(String token) {
         this.token = token;
     }
-
-
-    public Connection(Socket socket) {
-        super(socket);
-    }
-
-    private String username;
-    private String token;
 }

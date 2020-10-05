@@ -8,6 +8,11 @@ import java.time.ZonedDateTime;
 
 public class ByteUtils {
 
+    private static final ZoneId UTCZoneId = ZoneId.of(ZoneOffset.UTC.getId());
+
+    private ByteUtils() {
+    }
+
     public static byte[] intToBytes(int value) {
         return ByteBuffer.allocate(Integer.BYTES).putInt(value).array();
     }
@@ -20,11 +25,8 @@ public class ByteUtils {
         return ByteBuffer.allocate(Long.BYTES).putLong(value.toEpochSecond()).array();
     }
 
-    private static final ZoneId UTCZoneId = ZoneId.of(ZoneOffset.UTC.getId());
     public static ZonedDateTime zonedDateTimeFromBytes(byte[] bytes, int offset) {
         Instant instant = Instant.ofEpochSecond(ByteBuffer.wrap(bytes, offset, Long.BYTES).getLong());
         return ZonedDateTime.ofInstant(instant, UTCZoneId);
     }
-
-    private ByteUtils() { }
 }

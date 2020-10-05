@@ -9,20 +9,20 @@ import java.util.regex.Pattern;
 public abstract class Command {
 
     private final Pattern commandPattern;
+
     public Command(String command) {
         this.commandPattern = Pattern.compile(String.format("^(/%s) (.*)$", command));
     }
 
     public boolean match(Connection connection, String command) {
         Matcher matcher = commandPattern.matcher(command);
-        if(matcher.find()) {
+        if (matcher.find()) {
 
             try {
                 ArgumentParser parser = new ArgumentParser(matcher.group(2));
                 handle(connection, parser.parse());
                 return true;
-            }
-            catch (ArgumentParsingException exception) {
+            } catch (ArgumentParsingException exception) {
                 return false;
             }
         }

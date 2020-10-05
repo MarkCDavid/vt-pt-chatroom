@@ -6,7 +6,7 @@ public abstract class MessageHandler<M extends Message> implements MessageHandli
 
     public void handle(Message message) {
         //noinspection unchecked
-        this.handleCore((M)message);
+        this.handleCore((M) message);
     }
 
     protected abstract void handleCore(M message);

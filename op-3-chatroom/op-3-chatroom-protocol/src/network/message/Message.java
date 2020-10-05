@@ -1,8 +1,12 @@
 package network.message;
 
-import java.time.*;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 public abstract class Message {
+
+    private final ZonedDateTime dateTime;
+    private final String data;
 
     public Message(ZonedDateTime dateTime, String data) {
         this.dateTime = dateTime;
@@ -12,8 +16,6 @@ public abstract class Message {
     public Message(String data) {
         this(ZonedDateTime.now(ZoneOffset.UTC), data);
     }
-
-    public abstract byte[] pack(byte code);
 
     public static Message unpack(byte[] bytes) {
         byte code = bytes[1];
@@ -25,9 +27,13 @@ public abstract class Message {
         };
     }
 
-    public ZonedDateTime getDateTime() { return dateTime; }
-    public String getData() { return data; }
+    public abstract byte[] pack(byte code);
 
-    private final ZonedDateTime dateTime;
-    private final String data;
+    public ZonedDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public String getData() {
+        return data;
+    }
 }

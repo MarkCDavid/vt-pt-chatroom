@@ -16,29 +16,35 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ChatRoomForm {
 
+    private static final String DIRECT_MESSAGE = "/dm \"%s\" ";
+    private final Connection connection;
     private JPanel mainPanel;
-
     private JButton submitButton;
     private JButton logOutButton;
-
     private JTextArea userMessageField;
-
     private JList<Message> chatMessages;
     private DefaultListModel<Message> chatMessagesModel;
     private ConcurrentLinkedQueue<Message> chatMessagesQueue;
-
     private JList<String> loggedInUsers;
     private DefaultListModel<String> loggedInUsersModel;
     private ConcurrentLinkedQueue<String> loggedInUsersQueue;
     private ConcurrentLinkedQueue<String> loggedOutUsersQueue;
-
-    private final Connection connection;
-    private static final String DIRECT_MESSAGE = "/dm \"%s\" ";
+    private JFrame frame;
 
     public ChatRoomForm(Connection connection) {
         this.connection = connection;
         new Thread(getMessageHandler()).start();
         subscribeEvents(connection);
+    }
+
+    public static void show(JFrame frame, Connection connection) {
+        ChatRoomForm form = new ChatRoomForm(connection);
+        form.frame = frame;
+
+        frame.setContentPane(form.mainPanel);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
     }
 
     private void subscribeEvents(Connection connection) {
@@ -47,6 +53,7 @@ public class ChatRoomForm {
             public void keyTyped(KeyEvent e) {
                 handleEnter(e);
             }
+
             @Override
             public void keyPressed(KeyEvent e) {
                 handleEnter(e);
@@ -58,13 +65,12 @@ public class ChatRoomForm {
             }
 
             private void handleEnter(KeyEvent e) {
-                if(e.getKeyCode() != KeyEvent.VK_ENTER)
+                if (e.getKeyCode() != KeyEvent.VK_ENTER)
                     return;
 
-                if(e.isShiftDown()) {
+                if (e.isShiftDown()) {
                     addNewLineToMessage();
-                }
-                else {
+                } else {
                     e.consume();
                     sendMessage(connection);
                 }
@@ -89,7 +95,7 @@ public class ChatRoomForm {
 
         chatMessages.addListSelectionListener(listSelectionEvent -> {
             Message message = chatMessages.getSelectedValue();
-            if(message instanceof RegularMessage) {
+            if (message instanceof RegularMessage) {
                 RegularMessage regularMessage = (RegularMessage) message;
                 userMessageField.setText(String.format(DIRECT_MESSAGE, regularMessage.getUsername()));
             }
@@ -111,7 +117,7 @@ public class ChatRoomForm {
             while (true) {
 
                 NetworkMessage message = this.connection.read();
-                if(message == null || !proxy.proxy(connection, message)) {
+                if (message == null || !proxy.proxy(connection, message)) {
                     connection.close();
                     LoginForm.show(frame);
                     break;
@@ -134,7 +140,7 @@ public class ChatRoomForm {
                 boolean scrolledToBottom = chatMessages.getLastVisibleIndex() == chatMessagesModel.size() - 1;
                 boolean newMessages = false;
 
-                while(!chatMessagesQueue.isEmpty()) {
+                while (!chatMessagesQueue.isEmpty()) {
                     chatMessagesModel.addElement(chatMessagesQueue.poll());
                     newMessages = true;
                 }
@@ -147,7 +153,7 @@ public class ChatRoomForm {
                     loggedInUsersModel.removeElement(loggedOutUsersQueue.poll());
                 }
 
-                if(scrolledToBottom && newMessages)
+                if (scrolledToBottom && newMessages)
                     chatMessages.ensureIndexIsVisible(chatMessagesModel.size() - 1);
             }
         };
@@ -160,7 +166,7 @@ public class ChatRoomForm {
 
     private void sendMessage(Connection connection) {
         String textMessage = userMessageField.getText();
-        if(textMessage.isBlank())
+        if (textMessage.isBlank())
             return;
         userMessageField.setText("");
         ClientChatMessageNetworkMessage message = new ClientChatMessageNetworkMessage(connection.getToken(), textMessage);
@@ -183,17 +189,5 @@ public class ChatRoomForm {
         loggedInUsers.setCellRenderer(new LoggedInUsersRenderer(this.connection.getUsername(), new SolarizedTheme()));
         loggedInUsersQueue = new ConcurrentLinkedQueue<>();
         loggedOutUsersQueue = new ConcurrentLinkedQueue<>();
-    }
-
-
-    private JFrame frame;
-    public static void show(JFrame frame, Connection connection) {
-        ChatRoomForm form = new ChatRoomForm(connection);
-        form.frame = frame;
-
-        frame.setContentPane(form.mainPanel);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
     }
 }

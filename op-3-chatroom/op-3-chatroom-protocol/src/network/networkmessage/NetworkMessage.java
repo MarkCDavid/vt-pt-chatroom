@@ -2,6 +2,9 @@ package network.networkmessage;
 
 public abstract class NetworkMessage {
 
+    protected final Object[] data;
+    private boolean isHandled;
+
     public NetworkMessage(Object[] data) {
         this.data = data;
     }
@@ -12,8 +15,6 @@ public abstract class NetworkMessage {
 
     public abstract byte[] pack();
 
-    protected final Object[] data;
-
     public void setHandled() {
         isHandled = true;
     }
@@ -21,7 +22,5 @@ public abstract class NetworkMessage {
     public boolean isHandled() {
         return isHandled;
     }
-
-    private boolean isHandled;
 }
 

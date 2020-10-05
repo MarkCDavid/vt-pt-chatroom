@@ -7,7 +7,9 @@ import server.ServerContext;
 
 import java.util.Objects;
 
-public class LogoutRequestHandler  extends NetworkMessageHandler<Connection, LogoutRequestNetworkMessage> {
+public class LogoutRequestHandler extends NetworkMessageHandler<Connection, LogoutRequestNetworkMessage> {
+
+    private final ServerContext context;
 
     public LogoutRequestHandler(ServerContext context) {
         this.context = context;
@@ -15,7 +17,7 @@ public class LogoutRequestHandler  extends NetworkMessageHandler<Connection, Log
 
     @Override
     protected void handleCore(Connection connection, LogoutRequestNetworkMessage message) {
-        if(!Objects.equals(message.getToken(), connection.getToken())) {
+        if (!Objects.equals(message.getToken(), connection.getToken())) {
             System.out.println("Invalid token received for disconnect request for connection " + connection.getAddress() + ". Ignoring.");
             return;
         }
@@ -23,6 +25,4 @@ public class LogoutRequestHandler  extends NetworkMessageHandler<Connection, Log
         context.removeConnection(connection);
         message.setHandled();
     }
-
-    private final ServerContext context;
 }

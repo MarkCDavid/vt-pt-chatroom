@@ -9,9 +9,15 @@ import java.util.Map;
 
 public class MessageProxy {
 
+    private final Map<Class<? extends Message>, List<MessageHandlingSupport>> handlers;
+
+    public MessageProxy() {
+        this.handlers = new HashMap<>();
+    }
+
     public void proxy(Message message) {
         ensureHandlerContainerExists(message.getClass());
-        for(MessageHandlingSupport handler: handlers.get(message.getClass())) {
+        for (MessageHandlingSupport handler : handlers.get(message.getClass())) {
             handler.handle(message);
         }
     }
@@ -27,15 +33,8 @@ public class MessageProxy {
     }
 
     private void ensureHandlerContainerExists(Class<? extends Message> type) {
-        if(!handlers.containsKey(type))
+        if (!handlers.containsKey(type))
             handlers.put(type, new ArrayList<>());
     }
-
-
-    public MessageProxy() {
-        this.handlers = new HashMap<>();
-    }
-
-    private final Map<Class<? extends Message>, List<MessageHandlingSupport>> handlers;
 
 }

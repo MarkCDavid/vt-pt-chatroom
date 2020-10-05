@@ -17,7 +17,7 @@ public class ChatRoomServer {
 
         try {
             //noinspection InfiniteLoopStatement
-            while(true) {
+            while (true) {
                 Connection connection = new Connection(serverSocket.accept());
                 Thread thread = new Thread(serverContext.getProxy(serverContext, connection));
                 thread.start();

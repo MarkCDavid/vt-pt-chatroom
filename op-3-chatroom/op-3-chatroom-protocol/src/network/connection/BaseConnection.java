@@ -7,32 +7,36 @@ import java.net.Socket;
 
 public abstract class BaseConnection {
 
-    public String getAddress() { return address; }
-    public boolean isValid() { return io.isValid(); }
+    private final String address;
+    private final IO io;
 
     public BaseConnection(Socket socket) {
         this.address = socket.getInetAddress().toString();
         System.out.printf("Trying to establish connection to %s.%n", address);
 
         this.io = new IO(socket);
-        if(!io.isValid()) {
+        if (!io.isValid()) {
             System.out.printf("Failed to establish I/O with %s.%n", address);
         }
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public boolean isValid() {
+        return io.isValid();
     }
 
     public NetworkMessage read() {
         return Protocol.read(this.io);
     }
 
-    public int write(NetworkMessage message) {
-        return Protocol.send(this.io, message);
+    public void write(NetworkMessage message) {
+        Protocol.send(this.io, message);
     }
 
     public void close() {
         this.io.closeIO();
     }
-
-    private final String address;
-
-    private final IO io;
 }

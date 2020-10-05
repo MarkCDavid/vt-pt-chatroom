@@ -8,11 +8,17 @@ public class UserLoggedInNetworkMessage extends NetworkMessage {
     public static final byte CODE = 0x06;
 
     public UserLoggedInNetworkMessage(String username) {
-        super(new Object[]{ username });
+        super(new Object[]{username});
     }
 
     public UserLoggedInNetworkMessage(byte[] bytes) {
-        this( unpack(bytes) );
+        this(unpack(bytes));
+    }
+
+    private static String unpack(byte[] bytes) {
+        Unpacker unpacker = new Unpacker(bytes);
+        unpacker.skip(1);
+        return unpacker.unpackString();
     }
 
     public String getUsername() {
@@ -25,11 +31,5 @@ public class UserLoggedInNetworkMessage extends NetworkMessage {
         packer.packByte(CODE);
         packer.packString(getUsername());
         return packer.getArray();
-    }
-
-    private static String unpack(byte[] bytes) {
-        Unpacker unpacker = new Unpacker(bytes);
-        unpacker.skip(1);
-        return unpacker.unpackString();
     }
 }

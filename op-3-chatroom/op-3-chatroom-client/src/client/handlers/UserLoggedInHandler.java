@@ -10,6 +10,9 @@ import java.util.Queue;
 
 public class UserLoggedInHandler extends NetworkMessageHandler<Connection, UserLoggedInNetworkMessage> {
 
+    private final Queue<Message> messages;
+    private final Queue<String> users;
+
     public UserLoggedInHandler(Queue<Message> messages, Queue<String> users) {
         this.messages = messages;
         this.users = users;
@@ -21,7 +24,4 @@ public class UserLoggedInHandler extends NetworkMessageHandler<Connection, UserL
         users.add(message.getUsername());
         message.setHandled();
     }
-
-    private final Queue<Message> messages;
-    private final Queue<String> users;
 }

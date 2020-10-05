@@ -8,11 +8,13 @@ import java.awt.*;
 import java.util.Map;
 import java.util.Objects;
 
-public class LoggedInUsersRenderer  extends JLabel implements ListCellRenderer<String>  {
+public class LoggedInUsersRenderer extends JLabel implements ListCellRenderer<String> {
 
+    private static final String COLOR_FIELD = "color";
     private final ColorsTheme theme;
+    private final String username;
 
-    public LoggedInUsersRenderer(String username, ColorsTheme theme){
+    public LoggedInUsersRenderer(String username, ColorsTheme theme) {
         this.username = username;
         this.theme = theme;
     }
@@ -26,14 +28,13 @@ public class LoggedInUsersRenderer  extends JLabel implements ListCellRenderer<S
             boolean cellFocused) {
 
         boolean clientUsername = Objects.equals(this.username, username);
-        if(clientUsername) {
+        if (clientUsername) {
             String formatString = "<html> %s %s </html>";
 
             String data = HTMLFormattingUtils.tag("span", username, Map.of(COLOR_FIELD, theme.getGreenForeground()));
             String you = HTMLFormattingUtils.tag("span", "(you)", Map.of(COLOR_FIELD, theme.getBlackBackground()));
             setText(String.format(formatString, data, you));
-        }
-        else {
+        } else {
             String formatString = "<html> %s </html>";
             String data = HTMLFormattingUtils.tag("span", username, Map.of(COLOR_FIELD, theme.getBlackBackground()));
             setText(String.format(formatString, data));
@@ -42,8 +43,4 @@ public class LoggedInUsersRenderer  extends JLabel implements ListCellRenderer<S
         return this;
 
     }
-
-    private static final String COLOR_FIELD = "color";
-
-    private final String username;
 }

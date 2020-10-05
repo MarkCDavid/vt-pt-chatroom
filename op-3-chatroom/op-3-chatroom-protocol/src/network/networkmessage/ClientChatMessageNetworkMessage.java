@@ -15,6 +15,14 @@ public class ClientChatMessageNetworkMessage extends NetworkMessage {
         super(unpack(bytes));
     }
 
+    private static Object[] unpack(byte[] bytes) {
+        Unpacker unpacker = new Unpacker(bytes);
+        unpacker.skip(1);
+        String token = unpacker.unpackString();
+        String message = unpacker.unpackString();
+        return new Object[]{token, message};
+    }
+
     public String getToken() {
         return (String) data[0];
     }
@@ -30,13 +38,5 @@ public class ClientChatMessageNetworkMessage extends NetworkMessage {
         packer.packString(getToken());
         packer.packString(getMessage());
         return packer.getArray();
-    }
-
-    private static Object[] unpack(byte[] bytes) {
-        Unpacker unpacker = new Unpacker(bytes);
-        unpacker.skip(1);
-        String token = unpacker.unpackString();
-        String message = unpacker.unpackString();
-        return new Object[] { token, message };
     }
 }

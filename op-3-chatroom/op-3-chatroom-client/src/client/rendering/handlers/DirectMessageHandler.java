@@ -13,6 +13,13 @@ import java.util.Objects;
 
 public class DirectMessageHandler extends MessageHandler<DirectMessage> {
 
+    private static final String FROM_SELF = "you";
+    private static final String FORMAT_STRING = "<html>[%s] &lt %s -&gt %s &gt: %s</html>";
+    private final JLabel label;
+    private final String username;
+    private final ColorsTheme theme;
+    private final DateTimeFormatter dateTimeFormatter;
+
     public DirectMessageHandler(JLabel label, String username, ColorsTheme theme) {
         this.label = label;
         this.username = username;
@@ -34,15 +41,7 @@ public class DirectMessageHandler extends MessageHandler<DirectMessage> {
     }
 
     private String trySwitchUsername(String username) {
-        if(Objects.equals(this.username, username)) return DirectMessageHandler.FROM_SELF;
+        if (Objects.equals(this.username, username)) return DirectMessageHandler.FROM_SELF;
         return username;
     }
-
-    private static final String FROM_SELF = "you";
-    private static final String FORMAT_STRING = "<html>[%s] &lt %s -&gt %s &gt: %s</html>";
-
-    private final JLabel label;
-    private final String username;
-    private final ColorsTheme theme;
-    private final DateTimeFormatter dateTimeFormatter;
 }

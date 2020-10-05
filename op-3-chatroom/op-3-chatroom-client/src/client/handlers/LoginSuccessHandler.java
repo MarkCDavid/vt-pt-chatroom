@@ -12,5 +12,4 @@ public class LoginSuccessHandler extends NetworkMessageHandler<Connection, Login
         System.out.printf("Connection established with %s.%n", connection.getAddress());
         message.setHandled();
     }
-
 }

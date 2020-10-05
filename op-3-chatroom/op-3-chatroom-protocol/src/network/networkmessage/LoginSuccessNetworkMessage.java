@@ -6,12 +6,19 @@ import network.Unpacker;
 public class LoginSuccessNetworkMessage extends NetworkMessage {
 
     public static final byte CODE = 0x03;
+
     public LoginSuccessNetworkMessage(String token) {
         super(new Object[]{token});
     }
 
     public LoginSuccessNetworkMessage(byte[] bytes) {
-        this( unpack(bytes) );
+        this(unpack(bytes));
+    }
+
+    public static String unpack(byte[] bytes) {
+        Unpacker unpacker = new Unpacker(bytes);
+        unpacker.skip(1);
+        return unpacker.unpackString();
     }
 
     public String getToken() {
@@ -24,12 +31,6 @@ public class LoginSuccessNetworkMessage extends NetworkMessage {
         packer.packByte(CODE);
         packer.packString(getToken());
         return packer.getArray();
-    }
-
-    public static String unpack(byte[] bytes) {
-        Unpacker unpacker = new Unpacker(bytes);
-        unpacker.skip(1);
-        return unpacker.unpackString();
     }
 }
 

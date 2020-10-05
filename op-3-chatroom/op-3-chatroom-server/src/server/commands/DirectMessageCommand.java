@@ -10,6 +10,8 @@ import java.util.Objects;
 
 public class DirectMessageCommand extends Command {
 
+    private final ServerContext context;
+
     public DirectMessageCommand(ServerContext context) {
         super("dm");
         this.context = context;
@@ -17,7 +19,7 @@ public class DirectMessageCommand extends Command {
 
     @Override
     protected void handle(Connection connection, List<String> arguments) {
-        if(arguments.isEmpty())
+        if (arguments.isEmpty())
             return;
 
         String from = connection.getUsername();
@@ -29,16 +31,14 @@ public class DirectMessageCommand extends Command {
         DirectMessage directMessage = new DirectMessage(from, to, data);
         ServerChatMessageNetworkMessage message = new ServerChatMessageNetworkMessage(directMessage);
 
-        for(Connection c: context.getConnections()) {
-            if(Objects.equals(c.getUsername(), to))
+        for (Connection c : context.getConnections()) {
+            if (Objects.equals(c.getUsername(), to))
                 c.write(message);
 
-            if(selfMessage) continue;
+            if (selfMessage) continue;
 
-            if(Objects.equals(c.getUsername(), from))
+            if (Objects.equals(c.getUsername(), from))
                 c.write(message);
         }
     }
-
-    private final ServerContext context;
 }

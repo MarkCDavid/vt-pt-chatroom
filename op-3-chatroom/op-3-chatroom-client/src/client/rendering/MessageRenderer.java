@@ -3,8 +3,8 @@ package client.rendering;
 import client.rendering.handlers.DirectMessageHandler;
 import client.rendering.handlers.RegularMessageHandler;
 import client.rendering.handlers.SystemMessageHandler;
-import network.handlers.MessageProxy;
 import colors.ColorsTheme;
+import network.handlers.MessageProxy;
 import network.message.DirectMessage;
 import network.message.Message;
 import network.message.RegularMessage;
@@ -13,9 +13,11 @@ import network.message.SystemMessage;
 import javax.swing.*;
 import java.awt.*;
 
-public class MessageRenderer extends JLabel implements ListCellRenderer<Message>  {
+public class MessageRenderer extends JLabel implements ListCellRenderer<Message> {
 
-    public MessageRenderer(String username, ColorsTheme theme){
+    private final MessageProxy proxy;
+
+    public MessageRenderer(String username, ColorsTheme theme) {
         this.proxy = new MessageProxy();
         this.proxy.subscribe(SystemMessage.class, new SystemMessageHandler(this, theme));
         this.proxy.subscribe(DirectMessage.class, new DirectMessageHandler(this, username, theme));
@@ -28,11 +30,8 @@ public class MessageRenderer extends JLabel implements ListCellRenderer<Message>
         try {
             proxy.proxy(message);
             return this;
-        }
-        catch (Exception exception){
+        } catch (Exception exception) {
             return this;
         }
     }
-
-    private final MessageProxy proxy;
 }
