@@ -10,7 +10,6 @@ import java.net.UnknownHostException;
 public class LoginForm {
 
     public JPanel mainPanel;
-
     private JTextField usernameField;
     private JTextField serverField;
     private JButton logInButton;
@@ -25,16 +24,8 @@ public class LoginForm {
                 return;
             }
 
-            String address = serverField.getText();
-            if(address.length() == 0) address = "localhost";
-
-            int port;
-            try {
-                port = Integer.parseInt(portField.getText());
-            }
-            catch (NumberFormatException exception) {
-                port = 4444;
-            }
+            String address = getAddress();
+            int port = getPort();
 
             frame.setEnabled(false);
             try {
@@ -51,6 +42,20 @@ public class LoginForm {
         });
     }
 
+    private int getPort() {
+        try {
+            return Integer.parseInt(portField.getText());
+        }
+        catch (NumberFormatException exception) {
+            return 4444;
+        }
+    }
+
+    private final static String LOCALHOST = "localhost";
+
+    private String getAddress() {
+        return serverField.getText().isBlank() ? LOCALHOST : serverField.getText();
+    }
 
     private JFrame frame;
     public static void show(JFrame frame) {

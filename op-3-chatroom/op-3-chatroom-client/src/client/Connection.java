@@ -20,24 +20,10 @@ public class Connection extends BaseConnection {
     public Connection(Socket socket, String username) {
         super(socket);
         this.username = username;
+    }
 
-        this.write(new LoginRequestNetworkMessage(username));
-        NetworkMessage message = this.read();
-
-        if(message instanceof LoginSuccessNetworkMessage) {
-            LoginSuccessNetworkMessage loginNM = (LoginSuccessNetworkMessage)message;
-            this.token = loginNM.getToken();
-            System.out.println("Connection established with " + this.getAddress());
-        }
-        else if(message instanceof LoginFailureNetworkMessage) {
-            this.close();
-            LoginFailureNetworkMessage loginNM = (LoginFailureNetworkMessage) message;
-            JOptionPane.showMessageDialog(null, "Server declined your connection! Reason: " + loginNM.getReason());
-        }
-        else {
-            this.close();
-            JOptionPane.showMessageDialog(null, "Unknown server response!");
-        }
+    public void setToken(String token) {
+        this.token = token;
     }
 
     private String token;

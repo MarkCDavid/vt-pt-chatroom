@@ -1,5 +1,7 @@
 package client;
 
+import client.handlers.*;
+import network.handlers.MessageProxy;
 import network.message.Message;
 import network.message.RegularMessage;
 import network.message.SystemMessage;
@@ -89,21 +91,20 @@ public class ChatRoomForm {
 
     private Runnable getMessageHandler() {
         return () -> {
+
+            MessageProxy<Connection> proxy = new MessageProxy<>();
+            proxy.subscribe(LoginSuccessNetworkMessage.class, new LoginSuccessHandler());
+            proxy.subscribe(LoginFailureNetworkMessage.class, new LoginFailureHandler());
+            proxy.subscribe(ServerChatMessageNetworkMessage.class, new ServerChatMessageHandler(chatMessagesModel));
+            proxy.subscribe(UserLoggedInNetworkMessage.class, new UserLoggedInHandler(chatMessagesModel, loggedInUsersModel));
+            proxy.subscribe(UserLoggedOutNetworkMessage.class, new UserLoggedOutHandler(chatMessagesModel, loggedInUsersModel));
+
+            connection.write(new LoginRequestNetworkMessage(connection.getUsername()));
             while (true) {
+
                 NetworkMessage message = this.connection.read();
-                if (message instanceof ServerChatMessageNetworkMessage) {
-                    ServerChatMessageNetworkMessage serverChatMessageNM = (ServerChatMessageNetworkMessage) message;
-                    chatMessagesModel.addElement(serverChatMessageNM.getMessage());
-                } else if (message instanceof UserLoggedInNetworkMessage) {
-                    UserLoggedInNetworkMessage userLoggedInNM = (UserLoggedInNetworkMessage) message;
-                    chatMessagesModel.addElement(new SystemMessage("User Logged In", userLoggedInNM.getUsername()));
-                    loggedInUsersModel.addElement(userLoggedInNM.getUsername());
-                } else if (message instanceof UserLoggedOutNetworkMessage) {
-                    UserLoggedOutNetworkMessage userLoggedOutNM = (UserLoggedOutNetworkMessage) message;
-                    chatMessagesModel.addElement(new SystemMessage("User Logged Out", userLoggedOutNM.getUsername()));
-                    loggedInUsersModel.removeElement(userLoggedOutNM.getUsername());
-                }
-                else {
+                if(!proxy.proxy(connection, message)) {
+                    LoginForm.show(frame);
                     break;
                 }
             }
