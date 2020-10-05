@@ -1,6 +1,5 @@
 package client.rendering;
 
-import client.HTMLFormattingUtils;
 import client.rendering.handlers.DirectMessageHandler;
 import client.rendering.handlers.RegularMessageHandler;
 import client.rendering.handlers.SystemMessageHandler;

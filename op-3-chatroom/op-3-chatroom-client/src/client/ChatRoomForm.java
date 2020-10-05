@@ -12,6 +12,7 @@ import network.networkmessage.*;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ChatRoomForm {
     public JPanel mainPanel;
@@ -23,20 +24,23 @@ public class ChatRoomForm {
 
     private JList<Message> chatMessages;
     private DefaultListModel<Message> chatMessagesModel;
+    private ConcurrentLinkedQueue<Message> chatMessagesQueue;
 
     private JList<String> loggedInUsers;
     private DefaultListModel<String> loggedInUsersModel;
+    private ConcurrentLinkedQueue<String> loggedInUsersQueue;
+    private ConcurrentLinkedQueue<String> loggedOutUsersQueue;
 
     private final Connection connection;
     private static final String DIRECT_MESSAGE = "/dm \"%s\" ";
 
     public ChatRoomForm(Connection connection) {
         this.connection = connection;
+        new Thread(getMessageHandler()).start();
+        subscribeEvents(connection);
+    }
 
-        Thread readThread = new Thread(getMessageHandler());
-
-        readThread.start();
-
+    private void subscribeEvents(Connection connection) {
         userMessageField.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -98,17 +102,44 @@ public class ChatRoomForm {
             NetworkMessageProxy<Connection> proxy = new NetworkMessageProxy<>();
             proxy.subscribe(LoginSuccessNetworkMessage.class, new LoginSuccessHandler());
             proxy.subscribe(LoginFailureNetworkMessage.class, new LoginFailureHandler());
-            proxy.subscribe(ServerChatMessageNetworkMessage.class, new ServerChatMessageHandler(chatMessagesModel));
-            proxy.subscribe(UserLoggedInNetworkMessage.class, new UserLoggedInHandler(chatMessagesModel, loggedInUsersModel));
-            proxy.subscribe(UserLoggedOutNetworkMessage.class, new UserLoggedOutHandler(chatMessagesModel, loggedInUsersModel));
+            proxy.subscribe(ServerChatMessageNetworkMessage.class, new ServerChatMessageHandler(chatMessagesQueue));
+            proxy.subscribe(UserLoggedInNetworkMessage.class, new UserLoggedInHandler(chatMessagesQueue, loggedInUsersQueue));
+            proxy.subscribe(UserLoggedOutNetworkMessage.class, new UserLoggedOutHandler(chatMessagesQueue, loggedOutUsersQueue));
 
             connection.write(new LoginRequestNetworkMessage(connection.getUsername()));
             while (true) {
 
                 NetworkMessage message = this.connection.read();
                 if(message == null || !proxy.proxy(connection, message)) {
+                    connection.close();
                     LoginForm.show(frame);
                     break;
+                }
+
+                buildQueueUpdateWorker().run();
+            }
+        };
+    }
+
+    private SwingWorker<Object, Object> buildQueueUpdateWorker() {
+        return new SwingWorker<>() {
+            @Override
+            protected Object doInBackground() {
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                if (!chatMessagesQueue.isEmpty()) {
+                    chatMessagesModel.addElement(chatMessagesQueue.poll());
+                }
+
+                if (!loggedInUsersQueue.isEmpty()) {
+                    loggedInUsersModel.addElement(loggedInUsersQueue.poll());
+                }
+
+                if (!loggedOutUsersQueue.isEmpty()) {
+                    loggedInUsersModel.removeElement(loggedOutUsersQueue.poll());
                 }
             }
         };
@@ -131,13 +162,17 @@ public class ChatRoomForm {
     }
 
     private void createUIComponents() {
+
         chatMessagesModel = new DefaultListModel<>();
         chatMessages = new JList<>(chatMessagesModel);
+        chatMessagesQueue = new ConcurrentLinkedQueue<>();
         chatMessages.setCellRenderer(new MessageRenderer(this.connection.getUsername(), new SolarizedTheme()));
 
         loggedInUsersModel = new DefaultListModel<>();
         loggedInUsers = new JList<>(loggedInUsersModel);
         loggedInUsers.setCellRenderer(new LoggedInUsersRenderer(this.connection.getUsername(), new SolarizedTheme()));
+        loggedInUsersQueue = new ConcurrentLinkedQueue<>();
+        loggedOutUsersQueue = new ConcurrentLinkedQueue<>();
     }
 
 

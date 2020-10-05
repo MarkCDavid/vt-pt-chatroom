@@ -7,21 +7,22 @@ import network.message.SystemMessage;
 import network.networkmessage.UserLoggedInNetworkMessage;
 
 import javax.swing.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class UserLoggedInHandler extends NetworkMessageHandler<Connection, UserLoggedInNetworkMessage> {
 
-    public UserLoggedInHandler(DefaultListModel<Message> messages, DefaultListModel<String> users) {
+    public UserLoggedInHandler(ConcurrentLinkedQueue<Message> messages, ConcurrentLinkedQueue<String> users) {
         this.messages = messages;
         this.users = users;
     }
 
     @Override
     protected void handleCore(Connection connection, UserLoggedInNetworkMessage message) {
-        messages.addElement(new SystemMessage("User Logged In", message.getUsername()));
-        users.addElement(message.getUsername());
+        messages.add(new SystemMessage("User Logged In", message.getUsername()));
+        users.add(message.getUsername());
         message.setHandled();
     }
 
-    private final DefaultListModel<Message> messages;
-    private final DefaultListModel<String> users;
+    private final ConcurrentLinkedQueue<Message> messages;
+    private final ConcurrentLinkedQueue<String> users;
 }

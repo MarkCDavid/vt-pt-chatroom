@@ -22,6 +22,9 @@ public class DirectMessageCommand extends Command {
 
         String from = connection.getUsername();
         String to = arguments.get(0);
+
+        boolean selfMessage = Objects.equals(from, to);
+
         String data = String.join(" ", arguments.subList(1, arguments.size()));
         DirectMessage directMessage = new DirectMessage(from, to, data);
         ServerChatMessageNetworkMessage message = new ServerChatMessageNetworkMessage(directMessage);
@@ -29,6 +32,8 @@ public class DirectMessageCommand extends Command {
         for(Connection c: context.getConnections()) {
             if(Objects.equals(c.getUsername(), to))
                 c.write(message);
+
+            if(selfMessage) continue;
 
             if(Objects.equals(c.getUsername(), from))
                 c.write(message);

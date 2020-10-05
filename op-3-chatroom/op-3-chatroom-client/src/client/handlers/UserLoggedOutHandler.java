@@ -7,21 +7,22 @@ import network.message.SystemMessage;
 import network.networkmessage.UserLoggedInNetworkMessage;
 
 import javax.swing.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class UserLoggedOutHandler extends NetworkMessageHandler<Connection, UserLoggedInNetworkMessage> {
 
-    public UserLoggedOutHandler(DefaultListModel<Message> messages, DefaultListModel<String> users) {
+    public UserLoggedOutHandler(ConcurrentLinkedQueue<Message> messages, ConcurrentLinkedQueue<String> users) {
         this.messages = messages;
         this.users = users;
     }
 
     @Override
     protected void handleCore(Connection connection, UserLoggedInNetworkMessage message) {
-        messages.addElement(new SystemMessage("User Logged Out", message.getUsername()));
-        users.removeElement(message.getUsername());
+        messages.add(new SystemMessage("User Logged Out", message.getUsername()));
+        users.add(message.getUsername());
         message.setHandled();
     }
 
-    private final DefaultListModel<Message> messages;
-    private final DefaultListModel<String> users;
+    private final ConcurrentLinkedQueue<Message> messages;
+    private final ConcurrentLinkedQueue<String> users;
 }
