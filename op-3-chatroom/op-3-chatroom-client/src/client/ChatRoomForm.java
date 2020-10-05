@@ -159,6 +159,8 @@ public class ChatRoomForm {
 
     private void sendMessage(Connection connection) {
         String textMessage = userMessageField.getText();
+        if(textMessage.isBlank())
+            return;
         userMessageField.setText("");
         ClientChatMessageNetworkMessage message = new ClientChatMessageNetworkMessage(connection.getToken(), textMessage);
         connection.write(message);
