@@ -1,6 +1,6 @@
 package server;
 
-import network.handlers.MessageProxy;
+import network.handlers.NetworkMessageProxy;
 import network.networkmessage.*;
 import server.handlers.ClientChatMessageHandler;
 import server.handlers.LoginRequestHandler;
@@ -42,7 +42,7 @@ public class ServerContext {
 
     public Runnable getProxy(ServerContext context, Connection connection) {
         return () -> {
-            MessageProxy<Connection> proxy = new MessageProxy<>();
+            NetworkMessageProxy<Connection> proxy = new NetworkMessageProxy<>();
             proxy.subscribe(LoginRequestNetworkMessage.class, new LoginRequestHandler(context));
             proxy.subscribe(ClientChatMessageNetworkMessage.class, new ClientChatMessageHandler(context));
             proxy.subscribe(LogoutRequestNetworkMessage.class, new LogoutRequestHandler(context));
@@ -54,8 +54,7 @@ public class ServerContext {
                 }
 
                 NetworkMessage message = connection.read();
-
-                if(!proxy.proxy(connection, message)) {
+                if(message == null || !proxy.proxy(connection, message)) {
                     closeConnection(connection);
                     break;
                 }

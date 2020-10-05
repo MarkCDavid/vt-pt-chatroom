@@ -1,17 +1,13 @@
 package network.handlers;
 
-import network.connection.BaseConnection;
-import network.networkmessage.NetworkMessage;
+import network.message.Message;
 
-public abstract class MessageHandler<C extends BaseConnection, M extends NetworkMessage> implements RequestHandlingSupport<C> {
+public abstract class MessageHandler<M extends Message> implements MessageHandlingSupport {
 
-    public void handle(C connection, NetworkMessage message) {
-        if(message.isHandled())
-            return;
-
+    public void handle(Message message) {
         //noinspection unchecked
-        this.handleCore(connection, (M)message);
+        this.handleCore((M)message);
     }
 
-    protected abstract void handleCore(C connection, M message);
+    protected abstract void handleCore(M message);
 }

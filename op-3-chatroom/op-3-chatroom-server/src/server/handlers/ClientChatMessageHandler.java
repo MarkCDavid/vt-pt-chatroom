@@ -1,6 +1,6 @@
 package server.handlers;
 
-import network.handlers.MessageHandler;
+import network.handlers.NetworkMessageHandler;
 import network.message.DirectMessage;
 import network.message.RegularMessage;
 import network.networkmessage.ClientChatMessageNetworkMessage;
@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ClientChatMessageHandler extends MessageHandler<Connection, ClientChatMessageNetworkMessage> {
+public class ClientChatMessageHandler extends NetworkMessageHandler<Connection, ClientChatMessageNetworkMessage> {
 
     public ClientChatMessageHandler(ServerContext context) {
         this.context = context;

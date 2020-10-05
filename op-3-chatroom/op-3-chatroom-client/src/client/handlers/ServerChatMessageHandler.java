@@ -1,14 +1,13 @@
 package client.handlers;
 
-import client.ChatRoomForm;
 import client.Connection;
-import network.handlers.MessageHandler;
+import network.handlers.NetworkMessageHandler;
 import network.message.Message;
 import network.networkmessage.ServerChatMessageNetworkMessage;
 
 import javax.swing.*;
 
-public class ServerChatMessageHandler extends MessageHandler<Connection, ServerChatMessageNetworkMessage> {
+public class ServerChatMessageHandler extends NetworkMessageHandler<Connection, ServerChatMessageNetworkMessage> {
 
     public ServerChatMessageHandler(DefaultListModel<Message> model) {
         this.model = model;

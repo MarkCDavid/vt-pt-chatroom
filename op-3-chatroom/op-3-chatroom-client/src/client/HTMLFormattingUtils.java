@@ -4,8 +4,10 @@ import java.util.Map;
 
 public class HTMLFormattingUtils {
     public static String tag(String tag, String value, Map<String, String> css) {
-        if(css == null || css.isEmpty()) return String.format("<%s>%s</%s>", tag, value, tag);
-        else return String.format("<%s style=\"%s\">%s</%s>", tag, buildStyles(css), value, tag);
+        if(css == null || css.isEmpty())
+            return String.format("<%s>%s</%s>", tag, value, tag);
+        else
+            return String.format("<%s style=\"%s\">%s</%s>", tag, buildStyles(css), value, tag);
     }
 
     public static String tag(String tag, String value) {

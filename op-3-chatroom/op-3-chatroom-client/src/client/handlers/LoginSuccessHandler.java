@@ -1,14 +1,10 @@
 package client.handlers;
 
 import client.Connection;
-import network.handlers.MessageHandler;
-import network.message.Message;
+import network.handlers.NetworkMessageHandler;
 import network.networkmessage.LoginSuccessNetworkMessage;
-import network.networkmessage.ServerChatMessageNetworkMessage;
 
-import javax.swing.*;
-
-public class LoginSuccessHandler extends MessageHandler<Connection, LoginSuccessNetworkMessage> {
+public class LoginSuccessHandler extends NetworkMessageHandler<Connection, LoginSuccessNetworkMessage> {
 
     @Override
     protected void handleCore(Connection connection, LoginSuccessNetworkMessage message) {

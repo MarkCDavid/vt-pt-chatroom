@@ -1,15 +1,12 @@
 package client.handlers;
 
 import client.Connection;
-import client.LoginForm;
-import network.handlers.MessageHandler;
-import network.message.Message;
+import network.handlers.NetworkMessageHandler;
 import network.networkmessage.LoginFailureNetworkMessage;
-import network.networkmessage.ServerChatMessageNetworkMessage;
 
 import javax.swing.*;
 
-public class LoginFailureHandler extends MessageHandler<Connection, LoginFailureNetworkMessage> {
+public class LoginFailureHandler extends NetworkMessageHandler<Connection, LoginFailureNetworkMessage> {
 
     @Override
     protected void handleCore(Connection connection, LoginFailureNetworkMessage message) {

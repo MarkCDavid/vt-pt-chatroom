@@ -1,5 +1,6 @@
-package client;
+package client.rendering;
 
+import client.HTMLFormattingUtils;
 import colors.ColorsTheme;
 import colors.SolarizedTheme;
 
@@ -10,10 +11,11 @@ import java.util.Objects;
 
 public class LoggedInUsersRenderer  extends JLabel implements ListCellRenderer<String>  {
 
-    private final ColorsTheme theme = new SolarizedTheme();
+    private final ColorsTheme theme;
 
-    public LoggedInUsersRenderer(String username){
+    public LoggedInUsersRenderer(String username, ColorsTheme theme){
         this.username = username;
+        this.theme = theme;
     }
 
     @Override

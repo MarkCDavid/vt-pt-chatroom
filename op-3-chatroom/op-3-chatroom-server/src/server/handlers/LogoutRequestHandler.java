@@ -1,13 +1,13 @@
 package server.handlers;
 
-import network.handlers.MessageHandler;
+import network.handlers.NetworkMessageHandler;
 import network.networkmessage.LogoutRequestNetworkMessage;
 import server.Connection;
 import server.ServerContext;
 
 import java.util.Objects;
 
-public class LogoutRequestHandler  extends MessageHandler<Connection, LogoutRequestNetworkMessage> {
+public class LogoutRequestHandler  extends NetworkMessageHandler<Connection, LogoutRequestNetworkMessage> {
 
     public LogoutRequestHandler(ServerContext context) {
         this.context = context;

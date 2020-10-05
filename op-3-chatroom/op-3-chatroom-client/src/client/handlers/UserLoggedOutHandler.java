@@ -1,15 +1,14 @@
 package client.handlers;
 
 import client.Connection;
-import network.handlers.MessageHandler;
+import network.handlers.NetworkMessageHandler;
 import network.message.Message;
 import network.message.SystemMessage;
 import network.networkmessage.UserLoggedInNetworkMessage;
-import network.networkmessage.UserLoggedOutNetworkMessage;
 
 import javax.swing.*;
 
-public class UserLoggedOutHandler extends MessageHandler<Connection, UserLoggedInNetworkMessage> {
+public class UserLoggedOutHandler extends NetworkMessageHandler<Connection, UserLoggedInNetworkMessage> {
 
     public UserLoggedOutHandler(DefaultListModel<Message> messages, DefaultListModel<String> users) {
         this.messages = messages;

@@ -1,10 +1,12 @@
 package client;
 
 import client.handlers.*;
-import network.handlers.MessageProxy;
+import client.rendering.LoggedInUsersRenderer;
+import client.rendering.MessageRenderer;
+import colors.SolarizedTheme;
+import network.handlers.NetworkMessageProxy;
 import network.message.Message;
 import network.message.RegularMessage;
-import network.message.SystemMessage;
 import network.networkmessage.*;
 
 import javax.swing.*;
@@ -92,7 +94,7 @@ public class ChatRoomForm {
     private Runnable getMessageHandler() {
         return () -> {
 
-            MessageProxy<Connection> proxy = new MessageProxy<>();
+            NetworkMessageProxy<Connection> proxy = new NetworkMessageProxy<>();
             proxy.subscribe(LoginSuccessNetworkMessage.class, new LoginSuccessHandler());
             proxy.subscribe(LoginFailureNetworkMessage.class, new LoginFailureHandler());
             proxy.subscribe(ServerChatMessageNetworkMessage.class, new ServerChatMessageHandler(chatMessagesModel));
@@ -103,7 +105,7 @@ public class ChatRoomForm {
             while (true) {
 
                 NetworkMessage message = this.connection.read();
-                if(!proxy.proxy(connection, message)) {
+                if(message == null || !proxy.proxy(connection, message)) {
                     LoginForm.show(frame);
                     break;
                 }
@@ -130,11 +132,11 @@ public class ChatRoomForm {
     private void createUIComponents() {
         chatMessagesModel = new DefaultListModel<>();
         chatMessages = new JList<>(chatMessagesModel);
-        chatMessages.setCellRenderer(new MessageRenderer(this.connection.getUsername()));
+        chatMessages.setCellRenderer(new MessageRenderer(this.connection.getUsername(), new SolarizedTheme()));
 
         loggedInUsersModel = new DefaultListModel<>();
         loggedInUsers = new JList<>(loggedInUsersModel);
-        loggedInUsers.setCellRenderer(new LoggedInUsersRenderer(this.connection.getUsername()));
+        loggedInUsers.setCellRenderer(new LoggedInUsersRenderer(this.connection.getUsername(), new SolarizedTheme()));
     }
 
 

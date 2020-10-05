@@ -1,14 +1,14 @@
 package server.handlers;
 
 import network.Limits;
-import network.handlers.MessageHandler;
+import network.handlers.NetworkMessageHandler;
 import network.networkmessage.LoginFailureNetworkMessage;
 import network.networkmessage.LoginRequestNetworkMessage;
 import network.networkmessage.LoginSuccessNetworkMessage;
 import server.Connection;
 import server.ServerContext;
 import server.TokenGenerator;
-public class LoginRequestHandler extends MessageHandler<Connection, LoginRequestNetworkMessage> {
+public class LoginRequestHandler extends NetworkMessageHandler<Connection, LoginRequestNetworkMessage> {
 
     public LoginRequestHandler(ServerContext context) {
         this.context = context;

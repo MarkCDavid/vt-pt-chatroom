@@ -1,37 +1,32 @@
 package network.handlers;
 
-import network.connection.BaseConnection;
-import network.networkmessage.NetworkMessage;
+import network.message.Message;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MessageProxy<C extends BaseConnection> {
+public class MessageProxy {
 
-    public boolean proxy(C connection, NetworkMessage message) {
+    public void proxy(Message message) {
         ensureHandlerContainerExists(message.getClass());
-        for(RequestHandlingSupport<C> handler: handlers.get(message.getClass())) {
-            handler.handle(connection, message);
-            if(message.isHandled())
-                return true;
+        for(MessageHandlingSupport handler: handlers.get(message.getClass())) {
+            handler.handle(message);
         }
-        return false;
     }
 
-
-    public <T extends NetworkMessage> void subscribe(Class<T> type, RequestHandlingSupport<C> handler) {
+    public void subscribe(Class<? extends Message> type, MessageHandlingSupport handler) {
         ensureHandlerContainerExists(type);
         handlers.get(type).add(handler);
     }
 
-    public <T extends NetworkMessage> void unsubscribe(Class<T> type, RequestHandlingSupport<C> handler) {
+    public void unsubscribe(Class<? extends Message> type, MessageHandlingSupport handler) {
         ensureHandlerContainerExists(type);
         handlers.get(type).remove(handler);
     }
 
-    private <T extends NetworkMessage> void ensureHandlerContainerExists(Class<T> type) {
+    private void ensureHandlerContainerExists(Class<? extends Message> type) {
         if(!handlers.containsKey(type))
             handlers.put(type, new ArrayList<>());
     }
@@ -41,6 +36,6 @@ public class MessageProxy<C extends BaseConnection> {
         this.handlers = new HashMap<>();
     }
 
-    private final Map<Class<? extends NetworkMessage>, List<RequestHandlingSupport<C>>> handlers;
+    private final Map<Class<? extends Message>, List<MessageHandlingSupport>> handlers;
 
 }

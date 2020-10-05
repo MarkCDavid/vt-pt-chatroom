@@ -1,15 +1,14 @@
 package client.handlers;
 
 import client.Connection;
-import network.handlers.MessageHandler;
+import network.handlers.NetworkMessageHandler;
 import network.message.Message;
 import network.message.SystemMessage;
-import network.networkmessage.ServerChatMessageNetworkMessage;
 import network.networkmessage.UserLoggedInNetworkMessage;
 
 import javax.swing.*;
 
-public class UserLoggedInHandler extends MessageHandler<Connection, UserLoggedInNetworkMessage> {
+public class UserLoggedInHandler extends NetworkMessageHandler<Connection, UserLoggedInNetworkMessage> {
 
     public UserLoggedInHandler(DefaultListModel<Message> messages, DefaultListModel<String> users) {
         this.messages = messages;
