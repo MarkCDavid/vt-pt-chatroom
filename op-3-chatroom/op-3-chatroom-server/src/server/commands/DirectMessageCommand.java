@@ -17,12 +17,12 @@ public class DirectMessageCommand extends Command {
 
     @Override
     protected void handle(Connection connection, List<String> arguments) {
-        if(arguments.size() != 2)
+        if(arguments.isEmpty())
             return;
 
         String from = connection.getUsername();
         String to = arguments.get(0);
-        String data = arguments.get(1);
+        String data = String.join(" ", arguments.subList(1, arguments.size()));
         DirectMessage directMessage = new DirectMessage(from, to, data);
         ServerChatMessageNetworkMessage message = new ServerChatMessageNetworkMessage(directMessage);
 

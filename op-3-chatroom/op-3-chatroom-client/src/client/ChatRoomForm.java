@@ -28,6 +28,7 @@ public class ChatRoomForm {
     private DefaultListModel<String> loggedInUsersModel;
 
     private final Connection connection;
+    private static final String DIRECT_MESSAGE = "/dm \"%s\" ";
 
     public ChatRoomForm(Connection connection) {
         this.connection = connection;
@@ -76,7 +77,7 @@ public class ChatRoomForm {
         loggedInUsers.addListSelectionListener(listSelectionEvent -> {
             String username = loggedInUsers.getSelectedValue();
             if (username != null) {
-                userMessageField.setText(String.format("/dm %s ", username));
+                userMessageField.setText(String.format(DIRECT_MESSAGE, username));
             }
             loggedInUsers.clearSelection();
         });
@@ -85,7 +86,7 @@ public class ChatRoomForm {
             Message message = chatMessages.getSelectedValue();
             if(message instanceof RegularMessage) {
                 RegularMessage regularMessage = (RegularMessage) message;
-                userMessageField.setText(String.format("/dm %s ", regularMessage.getUsername()));
+                userMessageField.setText(String.format(DIRECT_MESSAGE, regularMessage.getUsername()));
             }
             chatMessages.clearSelection();
         });

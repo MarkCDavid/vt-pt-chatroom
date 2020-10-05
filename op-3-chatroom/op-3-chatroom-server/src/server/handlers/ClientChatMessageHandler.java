@@ -1,7 +1,6 @@
 package server.handlers;
 
 import network.handlers.NetworkMessageHandler;
-import network.message.DirectMessage;
 import network.message.RegularMessage;
 import network.networkmessage.ClientChatMessageNetworkMessage;
 import network.networkmessage.ServerChatMessageNetworkMessage;
