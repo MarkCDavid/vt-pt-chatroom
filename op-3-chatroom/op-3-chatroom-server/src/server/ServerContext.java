@@ -21,22 +21,22 @@ public class ServerContext {
     }
 
     public void addConnection(Connection connection) {
-        UserLoggedInNetworkMessage userLoggedInNM = new UserLoggedInNetworkMessage(connection.getUsername());
-        connection.write(userLoggedInNM);
+        UserLoggedInNetworkMessage userLoggedInMessage = new UserLoggedInNetworkMessage(connection.getUsername());
+        connection.write(userLoggedInMessage);
         for(Connection c: connections) {
-            c.write(userLoggedInNM);
+            c.write(userLoggedInMessage);
             connection.write(new UserLoggedInNetworkMessage(c.getUsername()));
         }
         connections.add(connection);
     }
 
     public void removeConnection(Connection connection) {
-        UserLoggedOutNetworkMessage userLoggedOutNM = new UserLoggedOutNetworkMessage(connection.getUsername());
+        UserLoggedOutNetworkMessage userLoggedOutMessage = new UserLoggedOutNetworkMessage(connection.getUsername());
         if(!connections.remove(connection))
             return;
 
         for(Connection c: connections) {
-            c.write(userLoggedOutNM);
+            c.write(userLoggedOutMessage);
         }
     }
 
@@ -48,11 +48,6 @@ public class ServerContext {
             proxy.subscribe(LogoutRequestNetworkMessage.class, new LogoutRequestHandler(context));
 
             while (true) {
-                if(!connection.isValid()){
-                    closeConnection(connection);
-                    break;
-                }
-
                 NetworkMessage message = connection.read();
                 if(message == null || !proxy.proxy(connection, message)) {
                     closeConnection(connection);

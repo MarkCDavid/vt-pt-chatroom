@@ -7,61 +7,49 @@ import network.networkmessage.ClientChatMessageNetworkMessage;
 import network.networkmessage.ServerChatMessageNetworkMessage;
 import server.Connection;
 import server.ServerContext;
+import server.commands.Command;
+import server.commands.DirectMessageCommand;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ClientChatMessageHandler extends NetworkMessageHandler<Connection, ClientChatMessageNetworkMessage> {
 
     public ClientChatMessageHandler(ServerContext context) {
         this.context = context;
+        this.commands = new ArrayList<>();
+        this.commands.add(new DirectMessageCommand(context));
     }
-
-
-    private static final Pattern dmPattern = Pattern.compile("^(/dm) (\\w+) (.*)");
 
     @Override
     protected void handleCore(Connection connection, ClientChatMessageNetworkMessage message) {
         if(!Objects.equals(message.getToken(), connection.getToken())) {
-            System.out.println("Invalid token received for connection " + connection.getAddress());
+            System.out.printf("Invalid token received for connection %s.%n", connection.getAddress());
             connection.close();
             return;
         }
 
-        String clientMessage = message.getMessage();
-        Matcher matcher = dmPattern.matcher(clientMessage);
-
-        if(matcher.find()) {
-            String from = connection.getUsername();
-            String to = matcher.group(2);
-            String data = matcher.group(3);
-
-            ServerChatMessageNetworkMessage serverChatMessageNM = new ServerChatMessageNetworkMessage(
-                    new DirectMessage(from, to, data)
-            );
-
-            for(Connection c: context.getConnections()) {
-                if(Objects.equals(c.getUsername(), to)) {
-                    connection.write(serverChatMessageNM);
-                    c.write(serverChatMessageNM);
-                    break;
-                }
+        for(Command command: commands) {
+            if(command.match(connection, message.getMessage())) {
+                message.setHandled();
+                break;
             }
         }
-        else{
-            ServerChatMessageNetworkMessage serverChatMessageNM = new ServerChatMessageNetworkMessage(
-                    new RegularMessage(connection.getUsername(), message.getMessage())
-            );
 
-            for(Connection c: context.getConnections()) {
-                c.write(serverChatMessageNM);
-            }
+        if(message.isHandled())
+            return;
+
+        RegularMessage regularMessage = new RegularMessage(connection.getUsername(), message.getMessage());
+        ServerChatMessageNetworkMessage chatMessage = new ServerChatMessageNetworkMessage(regularMessage);
+
+        for(Connection c: context.getConnections()) {
+            c.write(chatMessage);
         }
 
         message.setHandled();
     }
 
-
+    private final List<Command> commands;
     private final ServerContext context;
 }
