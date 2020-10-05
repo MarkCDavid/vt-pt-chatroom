@@ -4,15 +4,13 @@ import client.Connection;
 import network.handlers.NetworkMessageHandler;
 import network.message.Message;
 import network.message.SystemMessage;
-import network.networkmessage.UserLoggedInNetworkMessage;
 import network.networkmessage.UserLoggedOutNetworkMessage;
 
-import javax.swing.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Queue;
 
 public class UserLoggedOutHandler extends NetworkMessageHandler<Connection, UserLoggedOutNetworkMessage> {
 
-    public UserLoggedOutHandler(ConcurrentLinkedQueue<Message> messages, ConcurrentLinkedQueue<String> users) {
+    public UserLoggedOutHandler(Queue<Message> messages, Queue<String> users) {
         this.messages = messages;
         this.users = users;
     }
@@ -24,6 +22,6 @@ public class UserLoggedOutHandler extends NetworkMessageHandler<Connection, User
         message.setHandled();
     }
 
-    private final ConcurrentLinkedQueue<Message> messages;
-    private final ConcurrentLinkedQueue<String> users;
+    private final Queue<Message> messages;
+    private final Queue<String> users;
 }

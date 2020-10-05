@@ -12,4 +12,6 @@ public class TokenGenerator {
         secureRandom.nextBytes(randomBytes);
         return base64Encoder.encodeToString(randomBytes);
     }
+
+    private TokenGenerator() { }
 }

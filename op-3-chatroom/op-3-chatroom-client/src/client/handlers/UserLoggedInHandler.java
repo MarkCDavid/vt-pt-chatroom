@@ -6,12 +6,11 @@ import network.message.Message;
 import network.message.SystemMessage;
 import network.networkmessage.UserLoggedInNetworkMessage;
 
-import javax.swing.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Queue;
 
 public class UserLoggedInHandler extends NetworkMessageHandler<Connection, UserLoggedInNetworkMessage> {
 
-    public UserLoggedInHandler(ConcurrentLinkedQueue<Message> messages, ConcurrentLinkedQueue<String> users) {
+    public UserLoggedInHandler(Queue<Message> messages, Queue<String> users) {
         this.messages = messages;
         this.users = users;
     }
@@ -23,6 +22,6 @@ public class UserLoggedInHandler extends NetworkMessageHandler<Connection, UserL
         message.setHandled();
     }
 
-    private final ConcurrentLinkedQueue<Message> messages;
-    private final ConcurrentLinkedQueue<String> users;
+    private final Queue<Message> messages;
+    private final Queue<String> users;
 }

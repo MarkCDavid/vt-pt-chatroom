@@ -9,10 +9,7 @@ public class Limits {
         if(username.length() < Limits.MIN_USERNAME_LENGTH)
             return false;
 
-        if(username.length() > Limits.MAX_USERNAME_LENGTH)
-            return false;
-
-        return true;
+        return username.length() <= Limits.MAX_USERNAME_LENGTH;
     }
 
     private Limits() {}

@@ -3,14 +3,12 @@ package client.rendering.handlers;
 import client.HTMLFormattingUtils;
 import colors.ColorsTheme;
 import network.handlers.MessageHandler;
-import network.message.DirectMessage;
 import network.message.RegularMessage;
 
 import javax.swing.*;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.Objects;
 
 public class RegularMessageHandler extends MessageHandler<RegularMessage> {
 

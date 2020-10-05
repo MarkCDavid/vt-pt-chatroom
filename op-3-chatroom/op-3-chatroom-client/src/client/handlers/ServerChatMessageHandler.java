@@ -5,12 +5,11 @@ import network.handlers.NetworkMessageHandler;
 import network.message.Message;
 import network.networkmessage.ServerChatMessageNetworkMessage;
 
-import javax.swing.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Queue;
 
 public class ServerChatMessageHandler extends NetworkMessageHandler<Connection, ServerChatMessageNetworkMessage> {
 
-    public ServerChatMessageHandler(ConcurrentLinkedQueue<Message> model) {
+    public ServerChatMessageHandler(Queue<Message> model) {
         this.model = model;
     }
 
@@ -20,5 +19,5 @@ public class ServerChatMessageHandler extends NetworkMessageHandler<Connection, 
         message.setHandled();
     }
 
-    private final ConcurrentLinkedQueue<Message> model;
+    private final Queue<Message> model;
 }

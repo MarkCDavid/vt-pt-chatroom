@@ -2,7 +2,6 @@ package client.rendering;
 
 import client.HTMLFormattingUtils;
 import colors.ColorsTheme;
-import colors.SolarizedTheme;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +43,7 @@ public class LoggedInUsersRenderer  extends JLabel implements ListCellRenderer<S
 
     }
 
-    private final static String COLOR_FIELD = "color";
+    private static final String COLOR_FIELD = "color";
 
     private final String username;
 }

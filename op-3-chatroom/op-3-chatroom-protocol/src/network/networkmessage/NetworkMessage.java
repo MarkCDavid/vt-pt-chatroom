@@ -6,7 +6,7 @@ public abstract class NetworkMessage {
         this.data = data;
     }
 
-    public NetworkMessage(byte[] bytes) {
+    public NetworkMessage() {
         this.data = new Object[0];
     }
 

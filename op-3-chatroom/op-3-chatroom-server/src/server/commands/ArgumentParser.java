@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ArgumentParser {
 
-    public ArgumentParser(String argumentString) throws ArgumentParsingException {
+    public ArgumentParser(String argumentString) {
         this.argumentString = argumentString.trim().toCharArray();
         this.arguments = new ArrayList<>();
     }

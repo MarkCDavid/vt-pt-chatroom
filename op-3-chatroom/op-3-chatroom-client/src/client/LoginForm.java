@@ -9,7 +9,7 @@ import java.net.UnknownHostException;
 
 public class LoginForm {
 
-    public JPanel mainPanel;
+    private JPanel mainPanel;
     private JTextField usernameField;
     private JTextField serverField;
     private JButton logInButton;
@@ -51,7 +51,7 @@ public class LoginForm {
         }
     }
 
-    private final static String LOCALHOST = "localhost";
+    private static final String LOCALHOST = "localhost";
 
     private String getAddress() {
         return serverField.getText().isBlank() ? LOCALHOST : serverField.getText();

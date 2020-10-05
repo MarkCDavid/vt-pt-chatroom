@@ -7,12 +7,6 @@ import java.io.IOException;
 
 public class Protocol {
 
-// Message Exchange
-// Sender [int || messageSize] -> Receiver
-// Receiver -> [readInt] messageSize
-// Sender [byte[] || message] -> Receiver
-// Receiver -> [read(messageSize)] message
-
     public static int send(IO io, NetworkMessage message) {
         try {
             byte[] byteMessage = message.pack();
@@ -38,7 +32,6 @@ public class Protocol {
         }
     }
 
-    // NetworkMessage - first byte defines message type.
     public static NetworkMessage unpack(byte[] bytes){
         return switch (bytes[0]) {
             case LoginRequestNetworkMessage.CODE -> new LoginRequestNetworkMessage(bytes);
@@ -55,15 +48,3 @@ public class Protocol {
 
     private Protocol() { }
 }
-
-//  === CLIENT <-- SERVER ===
-//  Login Success          token {1}
-//  Login Failure          reason {1}
-//  User Logged In         username {1}
-//  User Logged Out        username, reason {1}
-//  Message                username, time, message {1, }
-
-//  === CLIENT --> SERVER ===
-//  Login Request          username {1}
-//  Logout Request         token {1}
-//  Message                token, message {1}

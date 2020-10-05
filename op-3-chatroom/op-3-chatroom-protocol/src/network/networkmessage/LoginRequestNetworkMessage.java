@@ -29,7 +29,7 @@ public class LoginRequestNetworkMessage extends NetworkMessage {
 
     public static String unpack(byte[] bytes) {
         Unpacker unpacker = new Unpacker(bytes);
-        unpacker.skip(1);;
+        unpacker.skip(1);
         return unpacker.unpackString();
     }
 

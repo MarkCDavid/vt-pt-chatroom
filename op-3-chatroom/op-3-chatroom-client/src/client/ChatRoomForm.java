@@ -15,7 +15,8 @@ import java.awt.event.KeyListener;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ChatRoomForm {
-    public JPanel mainPanel;
+
+    private JPanel mainPanel;
 
     private JButton submitButton;
     private JButton logOutButton;
