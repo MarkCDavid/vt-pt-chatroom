@@ -130,15 +130,15 @@ public class ChatRoomForm {
 
             @Override
             protected void done() {
-                if (!chatMessagesQueue.isEmpty()) {
+                while(!chatMessagesQueue.isEmpty()) {
                     chatMessagesModel.addElement(chatMessagesQueue.poll());
                 }
 
-                if (!loggedInUsersQueue.isEmpty()) {
+                while (!loggedInUsersQueue.isEmpty()) {
                     loggedInUsersModel.addElement(loggedInUsersQueue.poll());
                 }
 
-                if (!loggedOutUsersQueue.isEmpty()) {
+                while (!loggedOutUsersQueue.isEmpty()) {
                     loggedInUsersModel.removeElement(loggedOutUsersQueue.poll());
                 }
             }
