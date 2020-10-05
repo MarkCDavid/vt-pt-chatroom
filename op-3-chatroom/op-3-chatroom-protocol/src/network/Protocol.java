@@ -3,8 +3,6 @@ package network;
 import network.connection.IO;
 import network.networkmessage.*;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class Protocol {

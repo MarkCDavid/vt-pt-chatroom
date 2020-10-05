@@ -13,5 +13,15 @@ public abstract class NetworkMessage {
     public abstract byte[] pack();
 
     protected final Object[] data;
+
+    public void setHandled() {
+        isHandled = true;
+    }
+
+    public boolean isHandled() {
+        return isHandled;
+    }
+
+    private boolean isHandled;
 }
 
