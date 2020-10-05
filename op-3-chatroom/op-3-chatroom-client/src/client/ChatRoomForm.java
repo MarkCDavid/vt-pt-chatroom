@@ -130,8 +130,12 @@ public class ChatRoomForm {
 
             @Override
             protected void done() {
+                boolean scrolledToBottom = chatMessages.getLastVisibleIndex() == chatMessagesModel.size() - 1;
+                boolean newMessages = false;
+
                 while(!chatMessagesQueue.isEmpty()) {
                     chatMessagesModel.addElement(chatMessagesQueue.poll());
+                    newMessages = true;
                 }
 
                 while (!loggedInUsersQueue.isEmpty()) {
@@ -141,6 +145,9 @@ public class ChatRoomForm {
                 while (!loggedOutUsersQueue.isEmpty()) {
                     loggedInUsersModel.removeElement(loggedOutUsersQueue.poll());
                 }
+
+                if(scrolledToBottom && newMessages)
+                    chatMessages.ensureIndexIsVisible(chatMessagesModel.size() - 1);
             }
         };
     }
